@@ -16,8 +16,11 @@ import lombok.Setter;
 @NoArgsConstructor
 @Table(name = "customers")
 public class Contact extends BaseEntity {
-	@Column(name = "name")
-	private String name;
+	@Column(name = "firstName")
+	private String firstName;
+
+	@Column(name = "lastName")
+	private String lastName;
 
 	@Column(name = "telephone")
 	private String telephone;

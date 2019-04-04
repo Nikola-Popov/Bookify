@@ -21,7 +21,7 @@ public class ApplicationSecurityConfiguration extends WebSecurityConfigurerAdapt
 				.defaultSuccessUrl("/home").and().logout().logoutSuccessUrl("/");
 	}
 
-	private CsrfTokenRepository csrfTokenRepository() {
+	private CsrfTokenRepository createCsrfTokenRepository() {
 		HttpSessionCsrfTokenRepository repository = new HttpSessionCsrfTokenRepository();
 		repository.setSessionAttributeName("_csrf");
 		return repository;

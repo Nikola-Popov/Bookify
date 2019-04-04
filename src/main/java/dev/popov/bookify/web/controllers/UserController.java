@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
-@RequestMapping(path = "/users")
+@RequestMapping("/users")
 public class UserController extends BaseController {
 	@GetMapping("/register")
 	@PreAuthorize("isAnonymous()")
@@ -16,6 +16,7 @@ public class UserController extends BaseController {
 	}
 
 	@GetMapping("/login")
+	@PreAuthorize("isAnonymous()")
 	public ModelAndView login() {
 		return view("login");
 	}

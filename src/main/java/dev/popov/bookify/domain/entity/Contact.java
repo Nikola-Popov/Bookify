@@ -2,8 +2,6 @@ package dev.popov.bookify.domain.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import lombok.Getter;
@@ -28,7 +26,6 @@ public class Contact extends BaseEntity {
 	@Column(name = "email", unique = true, nullable = false)
 	private String email;
 
-	@OneToOne
-	@JoinColumn(name = "location_id")
-	private Location location;
+	@Column(name = "address")
+	private String address;
 }

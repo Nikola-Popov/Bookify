@@ -16,11 +16,9 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public abstract class BaseEntity {
-
 	@Id
 	@GeneratedValue(generator = "uuid-string")
 	@GenericGenerator(name = "uuid-string", strategy = "org.hibernate.id.UUIDGenerator")
 	@Column(name = "id")
 	private String id;
-
 }

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import dev.popov.bookify.domain.model.binding.UserRegisterBindingModel;
+import dev.popov.bookify.domain.model.service.UserServiceModel;
 import dev.popov.bookify.service.interfaces.UserService;
 
 @Controller
@@ -37,6 +38,8 @@ public class UserController extends BaseController {
 	@PreAuthorize("isAnonymous()")
 	public ModelAndView registerConfirm(
 			@ModelAttribute(name = "userRegisterBindingModel") UserRegisterBindingModel userRegisterBindingModel) {
+		userService.register(modelMapper.map(userRegisterBindingModel, UserServiceModel.class));
+
 		return redirect("/users/login");
 	}
 

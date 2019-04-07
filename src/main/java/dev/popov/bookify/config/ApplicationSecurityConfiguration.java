@@ -18,7 +18,8 @@ public class ApplicationSecurityConfiguration extends WebSecurityConfigurerAdapt
 				.antMatchers("/css/**", "/js/**", "/img/**", "/scss/**", "/vendor/**").permitAll()
 				.antMatchers("/", "/users/login", "/users/register").anonymous().anyRequest().authenticated().and()
 				.formLogin().loginPage("/users/login").usernameParameter("username").passwordParameter("password")
-				.defaultSuccessUrl("/home").and().logout().logoutSuccessUrl("/");
+				.defaultSuccessUrl("/home").and().logout().logoutUrl("/users/logout").invalidateHttpSession(true)
+				.logoutSuccessUrl("/");
 	}
 
 	private CsrfTokenRepository createCsrfTokenRepository() {

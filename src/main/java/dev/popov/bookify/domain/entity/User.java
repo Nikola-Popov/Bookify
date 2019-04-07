@@ -1,6 +1,7 @@
 package dev.popov.bookify.domain.entity;
 
 import static java.util.Collections.emptySet;
+import static javax.persistence.CascadeType.ALL;
 
 import java.util.Set;
 
@@ -36,11 +37,11 @@ public class User extends BaseEntity implements UserDetails {
 	@JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
 	private Set<Role> authorities = emptySet();
 
-	@OneToOne
-	@JoinColumn(name = "place_id", nullable = false)
-	private Place place;
+	@OneToOne(cascade = ALL)
+	@JoinColumn(name = "place_id")
+	private Event place;
 
-	@OneToOne
+	@OneToOne(cascade = ALL)
 	@JoinColumn(name = "contact_id")
 	private Contact contact;
 

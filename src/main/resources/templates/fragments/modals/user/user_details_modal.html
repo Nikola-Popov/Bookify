@@ -47,7 +47,8 @@
 						</div>
 						<div class="form-group">
 							<label class="form-check-label" for="user-details-roles">Roles</label>
-							<select class="form-control text-center" name="authorities" multiple>
+							<select class="form-control text-center" name="authorities"
+								multiple>
 								<option disabled th:each="role : *{authorities}"
 									th:text="${role}"></option>
 							</select>

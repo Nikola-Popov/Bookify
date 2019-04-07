@@ -3,6 +3,7 @@ package dev.popov.bookify.domain.entity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.validation.constraints.Email;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,7 +13,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "customers")
+@Table(name = "contacts")
 public class Contact extends BaseEntity {
 	@Column(name = "firstName")
 	private String firstName;
@@ -24,6 +25,7 @@ public class Contact extends BaseEntity {
 	private String telephone;
 
 	@Column(name = "email", unique = true, nullable = false)
+	@Email(message = "Not a valid email")
 	private String email;
 
 	@Column(name = "address")

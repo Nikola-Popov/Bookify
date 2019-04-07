@@ -38,10 +38,6 @@ public class User extends BaseEntity implements UserDetails {
 	private Set<Role> authorities = emptySet();
 
 	@OneToOne(cascade = ALL)
-	@JoinColumn(name = "place_id")
-	private Event place;
-
-	@OneToOne(cascade = ALL)
 	@JoinColumn(name = "contact_id")
 	private Contact contact;
 

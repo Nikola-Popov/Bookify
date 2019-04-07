@@ -1,5 +1,9 @@
 package dev.popov.bookify.service.impls;
 
+import static java.util.stream.Collectors.toList;
+
+import java.util.List;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -50,4 +54,11 @@ public class UserServiceImpl implements UserService {
 
 		return modelMapper.map(userRepository.saveAndFlush(user), UserServiceModel.class);
 	}
+
+	@Override
+	public List<UserServiceModel> findAll() {
+		return userRepository.findAll().stream().map(user -> modelMapper.map(user, UserServiceModel.class))
+				.collect(toList());
+	}
+
 }

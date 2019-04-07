@@ -1,5 +1,9 @@
 package dev.popov.bookify.web.controllers;
 
+import static java.util.stream.Collectors.toList;
+
+import java.util.List;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -12,6 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import dev.popov.bookify.domain.model.binding.UserRegisterBindingModel;
 import dev.popov.bookify.domain.model.service.UserServiceModel;
+import dev.popov.bookify.domain.model.view.UserListViewModel;
 import dev.popov.bookify.service.interfaces.UserService;
 
 @Controller
@@ -24,6 +29,15 @@ public class UserController extends BaseController {
 	public UserController(ModelMapper modelMapper, UserService userService) {
 		this.modelMapper = modelMapper;
 		this.userService = userService;
+	}
+
+	@GetMapping
+	public ModelAndView all(ModelAndView modelAndView) {
+		final List<UserListViewModel> userListViewModels = userService.findAll().stream()
+				.map(user -> modelMapper.map(user, UserListViewModel.class)).collect(toList());
+		modelAndView.addObject("userListViewModels", userListViewModels);
+
+		return view("all_users", modelAndView);
 	}
 
 	@GetMapping("/register")

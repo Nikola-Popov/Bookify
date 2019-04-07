@@ -21,7 +21,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Table(name = "events")
 public class Event extends BaseEntity {
-	@Column(name = "name")
+	@Column(name = "name", nullable = false)
 	private String name;
 
 	@Enumerated(EnumType.STRING)
@@ -37,9 +37,9 @@ public class Event extends BaseEntity {
 	@Column(name = "price")
 	private BigDecimal price;
 
-	@Column(name = "created_on")
+	@Column(name = "created_on", nullable = false, updatable = false)
 	private LocalDateTime createdOn = now();
 
-	@Column(name = "expires_on")
+	@Column(name = "expires_on", nullable = false)
 	private LocalDateTime expiresOn;
 }

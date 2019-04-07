@@ -32,7 +32,7 @@ public class UserController extends BaseController {
 	}
 
 	@GetMapping
-	public ModelAndView all(ModelAndView modelAndView) {
+	public ModelAndView fetchAll(ModelAndView modelAndView) {
 		final List<UserListViewModel> userListViewModels = userService.findAll().stream()
 				.map(user -> modelMapper.map(user, UserListViewModel.class)).collect(toList());
 		modelAndView.addObject("userListViewModels", userListViewModels);

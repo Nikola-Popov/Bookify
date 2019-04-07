@@ -13,7 +13,7 @@
 	<div class="container-fluid">
 		<div class="card shadow mb-4">
 			<div class="card-header py-3">
-				<h6 class="m-0 font-weight-bold text-primary">List of all users
+				<h6 class="m-0 font-weight-bold text-primary">List of all events
 				</h6>
 			</div>
 			<div class="card-body">
@@ -22,21 +22,23 @@
 						cellspacing="0">
 						<thead>
 							<tr>
-								<th>Username</th>
-								<th>Roles</th>
-								<th>User Details</th>
+								<th>Name</th>
+								<th>Type</th>
+								<th>Price</th>
+								<th>Event Details</th>
 							</tr>
 						</thead>
 						<tbody>
-							<th:block th:each="user : ${userListViewModels}"
-								th:object="${user}">
+							<th:block th:each="event : ${eventListViewModels}"
+								th:object="${event}">
 								<tr>
-									<td th:text="*{username}"></td>
-									<td th:text="*{authorities}"></td>
+									<td th:text="*{name}"></td>
+									<td th:text="*{eventType}"></td>
+									<td th:text="*{price}"></td>
 									<td class="text-center">
 										<button class="btn btn-dark" data-toggle="modal"
-											th:data-target="|#user_details_modal_*{id}|">Show</button> <th:block
-											th:replace="fragments/modals/user/user_details_modal"></th:block>
+											th:data-target="|#event_details_modal_*{id}|">Show</button> <th:block
+											th:replace="fragments/modals/event/event_details_modal"></th:block>
 									</td>
 								</tr>
 							</th:block>

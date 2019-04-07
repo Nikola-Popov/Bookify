@@ -1,0 +1,68 @@
+<th:block th:fragment="event_details_modal">
+	<div class="modal fade" th:id="|event_details_modal_*{id}|">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" th:text="|*{name} - Details|"></h5>
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<form th:id="|event_details_form-*{id}|" class="form">
+					<div class="modal-body">
+						<div class="form-group">
+							<label for="event-details-id" class="font-weight-bold">id</label>
+							<input type="text" class="form-control text-center"
+								id="event-details-id" name="id" th:value="*{id}" disabled />
+						</div>
+						<div class="form-group">
+							<label for="event-details-type" class="font-weight-bold">Type</label>
+							<input type="text" class="form-control text-center"
+								id="event-details-type" name="eventType" th:value="*{eventType}"
+								disabled />
+						</div>
+						<div class="form-group">
+							<label for="event-details-vouchers-count"
+								class="font-weight-bold">Available Vouchers</label> <input
+								class="form-control text-center" type="number"
+								name="vouchersCount" id="event-details-vouchers-count"
+								th:value="*{vouchersCount}" disabled />
+						</div>
+						<div class="form-group">
+							<label for="event-details-description" class="font-weight-bold">Description</label>
+							<input class="form-control text-center" type="text"
+								name="description" id="event-details-description"
+								th:value="*{description}" disabled />
+						</div>
+						<div class="form-group">
+							<label for="event-details-price" class="font-weight-bold">Price</label>
+							<input class="form-control text-center" type="email" name="email"
+								id="event-details-price" th:value="*{price}" disabled />
+						</div>
+						<div class="form-group">
+							<label for="event-details-created-on" class="font-weight-bold">Created
+								On</label> <input class="form-control text-center" type="text"
+								name="address" id="event-details-created-on"
+								th:value="*{createdOn}" disabled />
+						</div>
+						<div class="form-group">
+							<label for="event-details-expires-on" class="font-weight-bold">Expires
+								On</label> <input class="form-control text-center" type="text"
+								name="address" id="event-details-expires-on"
+								th:value="*{expiresOn}" disabled />
+						</div>
+					</div>
+					<div class="modal-footer d-flex justify-content-between">
+						<button type="button" class="btn btn-info" data-dismiss="modal"
+							data-toggle="modal" th:data-target="|#event_edit_modal_*{id}|">Edit
+						</button>
+						<button type="button" class="btn btn-danger" data-dismiss="modal"
+							data-toggle="modal" th:data-target="|#event-delete_modal_*{id}|">Delete
+						</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</th:block>

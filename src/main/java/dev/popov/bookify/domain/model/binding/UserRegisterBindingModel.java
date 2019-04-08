@@ -10,6 +10,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class UserRegisterBindingModel {
 	private String username;
+	// TODO change to bindingModel
 	private Contact contact;
 	private String password;
 	private String confirmPassword;

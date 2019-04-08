@@ -11,7 +11,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import dev.popov.bookify.domain.entity.Contact;
 import dev.popov.bookify.domain.entity.User;
+import dev.popov.bookify.domain.model.service.ContactServiceModel;
 import dev.popov.bookify.domain.model.service.UserServiceModel;
 import dev.popov.bookify.repository.UserRepository;
 import dev.popov.bookify.service.interfaces.RoleService;
@@ -59,6 +61,20 @@ public class UserServiceImpl implements UserService {
 	public List<UserServiceModel> findAll() {
 		return userRepository.findAll().stream().map(user -> modelMapper.map(user, UserServiceModel.class))
 				.collect(toList());
+	}
+
+	@Override
+	public void edit(String id, ContactServiceModel contactServiceModel) {
+		final User user = userRepository.findById(id)
+				.orElseThrow(() -> new UsernameNotFoundException("Unable to find user by id"));
+		user.setContact(modelMapper.map(contactServiceModel, Contact.class));
+
+		userRepository.saveAndFlush(user);
+	}
+
+	@Override
+	public void delete(String id) {
+		userRepository.deleteById(id);
 	}
 
 }

@@ -1,0 +1,52 @@
+<th:block th:fragment="user_edit_modal">
+	<div class="modal fade" th:id="|user_edit_modal_*{id}|">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" th:text="|*{username} - Edit|"></h5>
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<form th:id="|user_edit_form_*{id}|" class="form"
+					th:action="@{'/users/edit/' + *{id}}" th:method="put">
+					<div class="modal-body">
+						<div class="form-group">
+							<label for="editUserFirstName" class="font-weight-bold">First
+								Name</label> <input type="text" class="form-control text-center"
+								id="editUserFirstName" name="firstName" th:value="*{contact.firstName}" />
+						</div>
+						<div class="form-group">
+							<label for="editUserLastName" class="font-weight-bold">Last
+								Name</label> <input type="text" class="form-control text-center"
+								id="editUserLastName" name="lastName" th:value="*{contact.lastName}" />
+						</div>
+						<div class="form-group">
+							<label for="editUserEmail" class="font-weight-bold">Email</label>
+							<input type="text" class="form-control text-center"
+								id="editUserEmail" name="email" th:value="*{contact.email}" />
+						</div>
+						<div class="form-group">
+							<label for="editUserTelephone" class="font-weight-bold">Telephone</label>
+							<input type="text" class="form-control text-center"
+								id="editUserTelephone" name="telephone" th:value="*{contact.telephone}" />
+						</div>
+						<div class="form-group">
+							<label for="editUserAddress" class="font-weight-bold">Address</label>
+							<input type="text" class="form-control text-center"
+								id="editUserAddress" name="address" th:value="*{contact.address}" />
+						</div>
+					</div>
+					<div class="modal-footer d-flex justify-content-between">
+						<button type="submit" class="btn btn-success" data-dismiss="modal"
+							th:onclick="javascript:$('#user_edit_form_' + [[*{id}]]).submit()">Save
+							Changes</button>
+						<button type="button" class="btn btn-secondary"
+							data-dismiss="modal">Cancel</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</th:block>

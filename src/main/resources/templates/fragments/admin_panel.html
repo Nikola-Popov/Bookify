@@ -1,21 +1,6 @@
 <th:block th:fragment="admin_panel">
-	<div class="sidebar-heading">Admin Interface</div>
+	<div class="sidebar-heading">Admin Panel</div>
 
-	<!-- Nav Item - Pages Collapse Menu -->
-	<li class="nav-item"><a class="nav-link collapsed" href="#"
-		data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true"
-		aria-controls="collapseTwo"> <i class="fas fa-fw fa-cog"></i> <span>Components</span>
-	</a>
-		<div id="collapseTwo" class="collapse" aria-labelledby="headingTwo"
-			data-parent="#accordionSidebar">
-			<div class="bg-white py-2 collapse-inner rounded">
-				<h6 class="collapse-header">Custom Components:</h6>
-				<a class="collapse-item" href="buttons.html">Buttons</a> <a
-					class="collapse-item" href="cards.html">Cards</a>
-			</div>
-		</div></li>
-
-	<!-- Nav Item - Utilities Collapse Menu -->
 	<li class="nav-item"><a class="nav-link collapsed" href="#"
 		data-toggle="collapse" data-target="#collapseUtilities"
 		aria-expanded="true" aria-controls="collapseUtilities"> <i
@@ -27,8 +12,7 @@
 				<h6 class="collapse-header">Entities:</h6>
 				<a class="collapse-item" th:href="@{/users}">Users</a> <a
 					class="collapse-item" th:href="@{/events}">Events</a> <a
-					class="collapse-item" th:href="@{/purchases}">Purchases</a> <a
-					class="collapse-item" href="utilities-other.html">Other</a>
+					class="collapse-item" th:href="@{/purchases}">Purchases</a>
 			</div>
 		</div></li>
 	<hr class="sidebar-divider">

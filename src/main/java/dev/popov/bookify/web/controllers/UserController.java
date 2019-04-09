@@ -22,7 +22,7 @@ import dev.popov.bookify.domain.model.binding.UserRegisterBindingModel;
 import dev.popov.bookify.domain.model.service.ContactServiceModel;
 import dev.popov.bookify.domain.model.service.UserServiceModel;
 import dev.popov.bookify.domain.model.view.UserListViewModel;
-import dev.popov.bookify.service.interfaces.UserService;
+import dev.popov.bookify.service.user.UserService;
 
 @Controller
 @RequestMapping("/users")

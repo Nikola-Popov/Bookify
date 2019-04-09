@@ -1,4 +1,4 @@
-package dev.popov.bookify.service.impls;
+package dev.popov.bookify.service.user;
 
 import static java.util.stream.Collectors.toList;
 
@@ -12,14 +12,13 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import dev.popov.bookify.commons.exceptions.MissingUserException;
 import dev.popov.bookify.domain.entity.Contact;
 import dev.popov.bookify.domain.entity.User;
 import dev.popov.bookify.domain.model.service.ContactServiceModel;
 import dev.popov.bookify.domain.model.service.UserServiceModel;
 import dev.popov.bookify.repository.UserRepository;
-import dev.popov.bookify.service.exceptions.MissingUserException;
-import dev.popov.bookify.service.interfaces.RoleService;
-import dev.popov.bookify.service.interfaces.UserService;
+import dev.popov.bookify.service.role.RoleService;
 
 @Service
 public class UserServiceImpl implements UserService {

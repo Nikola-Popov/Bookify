@@ -16,7 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 import dev.popov.bookify.domain.model.binding.EventCreateBindingModel;
 import dev.popov.bookify.domain.model.service.EventServiceModel;
 import dev.popov.bookify.domain.model.view.EventListViewModel;
-import dev.popov.bookify.service.interfaces.EventService;
+import dev.popov.bookify.service.event.EventService;
 
 @Controller
 @RequestMapping("/events")

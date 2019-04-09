@@ -1,4 +1,4 @@
-package dev.popov.bookify.service.impls;
+package dev.popov.bookify.service.event;
 
 import static java.util.stream.Collectors.toList;
 
@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import dev.popov.bookify.domain.entity.Event;
 import dev.popov.bookify.domain.model.service.EventServiceModel;
 import dev.popov.bookify.repository.EventRepository;
-import dev.popov.bookify.service.interfaces.EventService;
 
 @Service
 public class EventServiceImpl implements EventService {

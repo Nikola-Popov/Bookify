@@ -1,4 +1,4 @@
-package dev.popov.bookify.service.interfaces;
+package dev.popov.bookify.service.role;
 
 import java.util.Set;
 

@@ -1,4 +1,4 @@
-package dev.popov.bookify.service.interfaces;
+package dev.popov.bookify.service.event;
 
 import java.util.List;
 

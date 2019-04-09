@@ -1,5 +1,8 @@
-package dev.popov.bookify.service.impls;
+package dev.popov.bookify.service.role;
 
+import static dev.popov.bookify.commons.constants.RoleConstants.ROLE_ADMIN;
+import static dev.popov.bookify.commons.constants.RoleConstants.ROLE_ROOT;
+import static dev.popov.bookify.commons.constants.RoleConstants.ROLE_USER;
 import static java.util.stream.Collectors.toSet;
 
 import java.util.Set;
@@ -8,30 +11,29 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import dev.popov.bookify.domain.entity.Role;
 import dev.popov.bookify.domain.model.service.RoleServiceModel;
 import dev.popov.bookify.repository.RoleRepository;
-import dev.popov.bookify.service.interfaces.RoleService;
 
 @Service
 public class RoleServiceImpl implements RoleService {
 	private final RoleRepository roleRepository;
 	private final ModelMapper modelMapper;
+	private final RoleFactory roleFactory;
 
 	@Autowired
-	public RoleServiceImpl(RoleRepository roleRepository, ModelMapper modelMapper) {
+	public RoleServiceImpl(RoleRepository roleRepository, ModelMapper modelMapper, RoleFactory roleFactory) {
 		this.roleRepository = roleRepository;
 		this.modelMapper = modelMapper;
+		this.roleFactory = roleFactory;
 	}
 
 	@Override
 	public void seedDefaultRolesInDb() {
 		if (this.roleRepository.count() == 0) {
-			this.roleRepository.saveAndFlush(new Role("ROLE_USER"));
-			this.roleRepository.saveAndFlush(new Role("ROLE_ADMIN"));
-			this.roleRepository.saveAndFlush(new Role("ROLE_ROOT"));
+			this.roleRepository.saveAndFlush(roleFactory.createRole(ROLE_USER));
+			this.roleRepository.saveAndFlush(roleFactory.createRole(ROLE_ADMIN));
+			this.roleRepository.saveAndFlush(roleFactory.createRole(ROLE_ROOT));
 		}
-
 	}
 
 	@Override

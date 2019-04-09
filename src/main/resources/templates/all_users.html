@@ -38,7 +38,7 @@
 											th:data-target="|#user_details_modal_*{id}|">Show</button> <th:block
 											th:replace="fragments/modals/user/user_details_modal">
 										</th:block> <th:block th:replace="fragments/modals/user/user_edit_modal"></th:block>
-										<hr>
+										<hr/>
 										<form th:id="|user_delete_form_*{id}|" class="form"
 											th:action="@{'/users/delete/' + *{id}}" th:method="delete">
 											<button class="btn btn-danger" type="submit">Delete</button>

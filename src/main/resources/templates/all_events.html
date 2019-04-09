@@ -32,13 +32,18 @@
 							<th:block th:each="event : ${eventListViewModels}"
 								th:object="${event}">
 								<tr>
-									<td th:text="*{name}"></td>
+									<td th:text="*{title}"></td>
 									<td th:text="*{eventType}"></td>
 									<td th:text="*{price}"></td>
 									<td class="text-center">
 										<button class="btn btn-dark" data-toggle="modal"
 											th:data-target="|#event_details_modal_*{id}|">Show</button> <th:block
 											th:replace="fragments/modals/event/event_details_modal"></th:block>
+										<hr/>
+										<form th:id="|event_delete_form_*{id}|" class="form"
+											th:action="@{'/events/delete/' + *{id}}" th:method="delete">
+											<button class="btn btn-danger" type="submit">Delete</button>
+										</form>
 									</td>
 								</tr>
 							</th:block>

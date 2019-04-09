@@ -9,7 +9,7 @@
 						<span aria-hidden="true">&times;</span>
 					</button>
 				</div>
-				<form th:id="|user_details_form-*{id}|" class="form">
+				<form th:id="|user_details_form_*{id}|" class="form">
 					<div class="modal-body">
 						<div class="form-group">
 							<label for="user-details-id" class="font-weight-bold">id</label>
@@ -57,9 +57,6 @@
 					<div class="modal-footer d-flex justify-content-between">
 						<button type="button" class="btn btn-info" data-dismiss="modal"
 							data-toggle="modal" th:data-target="|#user_edit_modal_*{id}|">Edit
-						</button>
-						<button type="button" class="btn btn-danger" data-dismiss="modal"
-							data-toggle="modal" th:data-target="|#user-delete_modal_*{id}|">Delete
 						</button>
 					</div>
 				</form>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<th:block th:include="~{fragments/head}"></th:block>
+</head>
+
+<body id="page-top">
+	<th:block th:include="~{fragments/navbar}"></th:block>
+
+	<div class="container">
+		<form class="form" th:action="@{/events/create}" th:method="post"
+			th:object="${eventCreateBindingModel}">
+			<div class="form-row">
+				<div class="form-group col-md-6">
+					<label for="inputTitle">Title</label> <input type="text"
+						class="form-control" id="inputTitle" placeholder="Event title"
+						th:field="*{title}">
+				</div>
+				<div class="form-group col-md-6">
+					<label for="inputVouchersCount">Available vouchers</label> <input
+						type="number" class="form-control" id="inputVouchersCount"
+						placeholder="Number of available vouchers" min="0"
+						th:field="*{vouchersCount}">
+				</div>
+			</div>
+			<label class="my-1 mr-2" for="inputType">Type</label> <select
+				class="custom-select my-1 mr-sm-2" id="inputType"
+				th:field="*{eventType}">
+				<option
+					th:each="type: ${T(dev.popov.bookify.domain.entity.EventType).values()}"
+					th:value="${type}" th:text="${type}"></option>
+			</select>
+
+			<div class="form-group">
+				<label for="inputAddress">Address</label> <input type="text"
+					class="form-control" id="inputAddress" placeholder="Event location"
+					th:field="*{address}">
+			</div>
+			<div class="form-group">
+				<label for="inputExpiresOn">Expires on</label> <input type="date"
+					class="form-control" id="inputExpiresOn"
+					placeholder="Event expiration date" th:field="*{expiresOn}">
+			</div>
+			<div class="input-group mb-3">
+				<div class="input-group-prepend">
+					<span class="input-group-text">EUR</span>
+				</div>
+				<input type="number" class="form-control" th:field="*{price}">
+				<div class="input-group-append">
+					<span class="input-group-text">.00</span>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label for="inputDescription">Description</label>
+				<textarea class="form-control" id="inputDescription" rows="5"
+					th:field="*{description}"></textarea>
+			</div>
+			<button type="submit" class="btn btn-primary btn-lg btn-block">Create</button>
+		</form>
+	</div>
+	<th:block th:include="~{fragments/footer}"></th:block>
+
+	<a class="scroll-to-top rounded" href="#page-top"> <i
+		class="fas fa-angle-up"></i>
+	</a>
+
+	<th:block th:include="~{fragments/logout_modal}"></th:block>
+	<th:block th:include="~{fragments/core_js_imports}"></th:block>
+</body>
+</html>
+

@@ -1,10 +1,9 @@
-package dev.popov.bookify.domain.model.service;
+package dev.popov.bookify.domain.model.binding;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import dev.popov.bookify.domain.entity.EventType;
 import lombok.Getter;
@@ -14,15 +13,14 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class EventServiceModel extends BaseServiceModel {
-	@NotEmpty
-	@NotNull
+public class EventCreateBindingModel {
 	private String title;
 	private String address;
 	private EventType eventType;
 	private int vouchersCount;
 	private String description;
 	private BigDecimal price;
-	private LocalDateTime createdOn;
-	private LocalDateTime expiresOn;
+
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private LocalDate expiresOn;
 }

@@ -8,6 +8,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import dev.popov.bookify.domain.entity.Event;
 import dev.popov.bookify.domain.model.service.EventServiceModel;
 import dev.popov.bookify.repository.EventRepository;
 import dev.popov.bookify.service.interfaces.EventService;
@@ -29,4 +30,8 @@ public class EventServiceImpl implements EventService {
 				.collect(toList());
 	}
 
+	@Override
+	public void create(EventServiceModel eventServiceModel) {
+		eventRepository.saveAndFlush(modelMapper.map(eventServiceModel, Event.class));
+	}
 }

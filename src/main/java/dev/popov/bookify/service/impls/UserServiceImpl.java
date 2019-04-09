@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -16,6 +17,7 @@ import dev.popov.bookify.domain.entity.User;
 import dev.popov.bookify.domain.model.service.ContactServiceModel;
 import dev.popov.bookify.domain.model.service.UserServiceModel;
 import dev.popov.bookify.repository.UserRepository;
+import dev.popov.bookify.service.exceptions.MissingUserException;
 import dev.popov.bookify.service.interfaces.RoleService;
 import dev.popov.bookify.service.interfaces.UserService;
 
@@ -66,7 +68,8 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public void edit(String id, ContactServiceModel contactServiceModel) {
 		final User user = userRepository.findById(id)
-				.orElseThrow(() -> new UsernameNotFoundException("Unable to find user by id"));
+				.orElseThrow(() -> new MissingUserException("Unable to find user by id"));
+		forbidActionOnRoot(user);
 		user.setContact(modelMapper.map(contactServiceModel, Contact.class));
 
 		userRepository.saveAndFlush(user);
@@ -74,7 +77,14 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public void delete(String id) {
+		forbidActionOnRoot(
+				userRepository.findById(id).orElseThrow(() -> new MissingUserException("Unable to find user by id")));
 		userRepository.deleteById(id);
 	}
 
+	private void forbidActionOnRoot(final User user) {
+		if (user.getAuthorities().stream().anyMatch(role -> role.getAuthority().equalsIgnoreCase("ROLE_ROOT"))) {
+			throw new AccessDeniedException("You are not eligible to perform actions on ROOT!");
+		}
+	}
 }

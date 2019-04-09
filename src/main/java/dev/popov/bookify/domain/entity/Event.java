@@ -1,9 +1,9 @@
 package dev.popov.bookify.domain.entity;
 
-import static java.time.LocalDateTime.now;
+import static java.time.LocalDate.now;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -21,8 +21,11 @@ import lombok.Setter;
 @NoArgsConstructor
 @Table(name = "events")
 public class Event extends BaseEntity {
-	@Column(name = "name", nullable = false)
-	private String name;
+	@Column(name = "title", nullable = false)
+	private String title;
+
+	@Column(name = "address")
+	private String address;
 
 	@Enumerated(EnumType.STRING)
 	@Column(name = "event_type")
@@ -38,8 +41,8 @@ public class Event extends BaseEntity {
 	private BigDecimal price;
 
 	@Column(name = "created_on", nullable = false, updatable = false)
-	private LocalDateTime createdOn = now();
+	private LocalDate createdOn = now();
 
-	@Column(name = "expires_on", nullable = false)
-	private LocalDateTime expiresOn;
+	@Column(name = "expires_on")
+	private LocalDate expiresOn;
 }

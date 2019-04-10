@@ -1,5 +1,6 @@
 package dev.popov.bookify.service.event;
 
+import static dev.popov.bookify.domain.model.service.EventTypeServiceModel.ALL;
 import static java.util.stream.Collectors.toList;
 
 import java.util.List;
@@ -38,7 +39,7 @@ public class EventServiceImpl implements EventService {
 
 	@Override
 	public List<EventServiceModel> findAllByEventType(EventTypeServiceModel eventTypeServiceModel) {
-		if (eventTypeServiceModel.equals(EventTypeServiceModel.ALL)) {
+		if (eventTypeServiceModel.equals(ALL)) {
 			return findAll();
 		}
 

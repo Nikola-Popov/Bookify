@@ -3,6 +3,7 @@ package dev.popov.bookify.service.role;
 import static dev.popov.bookify.commons.constants.RoleConstants.ROLE_ADMIN;
 import static dev.popov.bookify.commons.constants.RoleConstants.ROLE_ROOT;
 import static dev.popov.bookify.commons.constants.RoleConstants.ROLE_USER;
+import static java.util.Arrays.asList;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -17,6 +18,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.modelmapper.ModelMapper;
 
 import dev.popov.bookify.domain.entity.Role;
+import dev.popov.bookify.domain.model.service.RoleServiceModel;
 import dev.popov.bookify.repository.RoleRepository;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -69,5 +71,23 @@ public class RoleServiceImplTest {
 		verify(roleRepositoryMock, never()).saveAndFlush(any(Role.class));
 	}
 
-	// TODO test other methods in the class
+	@Test
+	public void testFindAllRoles() {
+		when(roleRepositoryMock.findAll()).thenReturn(asList(roleUserMock));
+
+		roleServiceImpl.findAllRoles();
+
+		verify(roleRepositoryMock).findAll();
+		verify(modelMapperMock).map(roleUserMock, RoleServiceModel.class);
+	}
+
+	@Test
+	public void testFindByAuthorityFindsTheCorrectRole() {
+		when(roleRepositoryMock.findByAuthority(ROLE_USER)).thenReturn(roleUserMock);
+
+		roleServiceImpl.findByAuthority(ROLE_USER);
+
+		verify(roleRepositoryMock).findByAuthority(ROLE_USER);
+		verify(modelMapperMock).map(roleUserMock, RoleServiceModel.class);
+	}
 }

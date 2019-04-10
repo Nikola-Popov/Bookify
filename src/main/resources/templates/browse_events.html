@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<th:block th:include="~{fragments/head}"></th:block>
+</head>
+
+<body id="page-top">
+	<th:block th:include="~{fragments/navbar}"></th:block>
+
+	<div class="container-fluid">
+		<div class="row justify-content-center">
+			<div class="btn-group" role="group" aria-label="Basic example">
+				<button id="food" type="button" class="btn btn-primary">Food</button>
+				<button id="entertainment" type="button" class="btn btn-primary">Entertainment</button>
+				<button id="all" type="button" class="btn btn-info">All</button>
+				<button id="relax" type="button" class="btn btn-primary">Relax</button>
+				<button id="sport" type="button" class="btn btn-primary">Sport</button>
+				<button id="study" type="button" class="btn btn-primary">Study</button>
+			</div>
+		</div>
+	</div>
+	<br />
+
+	<div class="container-fluid">
+		<div class="row" id="event_container"></div>
+	</div>
+
+	<th:block th:include="~{fragments/footer}"></th:block>
+
+	<a class="scroll-to-top rounded" href="#page-top"> <i
+		class="fas fa-angle-up"></i>
+	</a>
+
+	<th:block th:include="~{fragments/logout_modal}"></th:block>
+	<th:block th:include="~{fragments/core_js_imports}"></th:block>
+
+	<script>
+		function filter(type) {
+			$("#event_container").html("")
+			fetch("http://localhost:8000/events/filter?type=" + type) 
+					.then((response) => response.json())
+					.then((json) => json.forEach((event) => {
+						const eventCard = "<div class='col-xl-6 col-md-6 mb-4'><div class='card shadow mb-4'><div class='card-header py-3 d-flex flex-row align-items-center justify-content-between'><h6 class='m-0 font-weight-bold text-primary'>"+event.title+"</h6><div class='dropdown no-arrow'><a class='dropdown-toggle' href='#' role='button' id='dropdownMenuLink' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'> <i class='fas fa-ellipsis-v fa-sm fa-fw text-gray-400'></i></a><div class='dropdown-menu dropdown-menu-right shadow animated--fade-in' aria-labelledby='dropdownMenuLink'><div class='dropdown-header'>Dropdown Header:</div>	<a class='dropdown-item' href='#'>Action</a> <a class='dropdown-item' href='#'>Another action</a><div class='dropdown-divider'></div><a class='dropdown-item' href='#'>Something else here</a></div></div></div><div id class='card-body'>replace body</div></div></div>"			
+						$("#event_container").append(eventCard);
+					}));
+		}
+		
+		$("#food").click(() => {
+			filter("FOOD");
+		})
+		$("#entertainment").click(() => {
+			filter("ENTERTAINMENT");
+		})		
+		$("#all").click(() => {
+			filter("ALL");
+		})		
+		$("#relax").click(() => {
+			filter("RELAX");
+		})		
+		$("#sport").click(() => {
+			filter("SPORT");
+		})		
+		$("#study").click(() => {
+			filter("STUDY");
+		})
+		
+	     $(document).ready(function () {
+			filter("ALL")});
+	</script>
+</body>
+</html>

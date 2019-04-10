@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import dev.popov.bookify.domain.model.binding.EventCreateBindingModel;
@@ -55,5 +57,17 @@ public class EventController extends BaseController {
 		modelAndView.addObject("eventListViewModels", eventListViewModels);
 
 		return view("all_events", modelAndView);
+	}
+
+	@GetMapping("/filter")
+	@ResponseBody
+	public List<EventListViewModel> fetchApplyingFilter(@RequestParam(name = "type") String type) {
+		return eventService.findAllByEventType(type).stream()
+				.map(event -> modelMapper.map(event, EventListViewModel.class)).collect(toList());
+	}
+
+	@GetMapping("/browse")
+	public ModelAndView browse() {
+		return view("browse_events");
 	}
 }

@@ -8,4 +8,6 @@ public interface EventService {
 	List<EventServiceModel> findAll();
 
 	void create(EventServiceModel eventServiceModel);
+
+	List<EventServiceModel> findAllByEventType(String eventType);
 }

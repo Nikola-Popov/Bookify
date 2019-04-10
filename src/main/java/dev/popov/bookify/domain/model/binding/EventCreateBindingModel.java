@@ -5,7 +5,6 @@ import java.time.LocalDate;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-import dev.popov.bookify.domain.entity.EventType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,7 +15,7 @@ import lombok.Setter;
 public class EventCreateBindingModel {
 	private String title;
 	private String address;
-	private EventType eventType;
+	private EventTypeBindingModel eventType;
 	private int vouchersCount;
 	private String description;
 	private BigDecimal price;

@@ -17,6 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import dev.popov.bookify.domain.model.binding.EventCreateBindingModel;
 import dev.popov.bookify.domain.model.service.EventServiceModel;
+import dev.popov.bookify.domain.model.service.EventTypeServiceModel;
 import dev.popov.bookify.domain.model.view.EventListViewModel;
 import dev.popov.bookify.service.event.EventService;
 
@@ -62,7 +63,7 @@ public class EventController extends BaseController {
 	@GetMapping("/filter")
 	@ResponseBody
 	public List<EventListViewModel> fetchApplyingFilter(@RequestParam(name = "type") String type) {
-		return eventService.findAllByEventType(type).stream()
+		return eventService.findAllByEventType(EventTypeServiceModel.valueOf(type)).stream()
 				.map(event -> modelMapper.map(event, EventListViewModel.class)).collect(toList());
 	}
 

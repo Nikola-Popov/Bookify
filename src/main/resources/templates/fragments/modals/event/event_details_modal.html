@@ -1,65 +1,60 @@
 <th:block th:fragment="event_details_modal">
-	<div class="modal fade" th:id="|event_details_modal_*{id}|">
-		<div class="modal-dialog modal-dialog-centered">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title" th:text="|*{title} - Details|"></h5>
-					<button type="button" class="close" data-dismiss="modal"
-						aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-				</div>
-				<form th:id="|event_details_form-*{id}|" class="form">
-					<div class="modal-body">
-						<div class="form-group">
-							<label for="event-details-id" class="font-weight-bold">id</label>
-							<input type="text" class="form-control text-center"
-								id="event-details-id" name="id" th:value="*{id}" disabled />
-						</div>
-						<div class="form-group">
-							<label for="event-details-type" class="font-weight-bold">Type</label>
-							<input type="text" class="form-control text-center"
-								id="event-details-type" name="eventType" th:value="*{eventType}"
-								disabled />
-						</div>
-						<div class="form-group">
-							<label for="event-details-vouchers-count"
-								class="font-weight-bold">Available Vouchers</label> <input
-								class="form-control text-center" type="number"
-								name="vouchersCount" id="event-details-vouchers-count"
-								th:value="*{vouchersCount}" disabled />
-						</div>
-						<div class="form-group">
-							<label for="event-details-description" class="font-weight-bold">Description</label>
-							<input class="form-control text-center" type="text"
-								name="description" id="event-details-description"
-								th:value="*{description}" disabled />
-						</div>
-						<div class="form-group">
-							<label for="event-details-price" class="font-weight-bold">Price</label>
-							<input class="form-control text-center" type="email" name="email"
-								id="event-details-price" th:value="*{price}" disabled />
-						</div>
-						<div class="form-group">
-							<label for="event-details-created-on" class="font-weight-bold">Created
-								On</label> <input class="form-control text-center" type="text"
-								name="address" id="event-details-created-on"
-								th:value="*{createdOn}" disabled />
-						</div>
-						<div class="form-group">
-							<label for="event-details-expires-on" class="font-weight-bold">Expires
-								On</label> <input class="form-control text-center" type="text"
-								name="address" id="event-details-expires-on"
-								th:value="*{expiresOn}" disabled />
-						</div>
-					</div>
-					<div class="modal-footer d-flex justify-content-between">
-						<button type="button" class="btn btn-danger btn-block" data-dismiss="modal"
-							data-toggle="modal" th:data-target="|#event_edit_modal_*{id}|">Edit
-						</button>
-					</div>
-				</form>
-			</div>
-		</div>
-	</div>
+ <div class="modal fade" th:id="|event_details_modal_*{id}|">
+  <div class="modal-dialog modal-dialog-centered">
+   <div class="modal-content">
+    <div class="modal-header">
+     <h5 class="modal-title" th:text="|*{title} - Details|"></h5>
+     <button type="button" class="close" data-dismiss="modal"
+      aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+     </button>
+    </div>
+    <form th:id="|user_details_form_*{id}|" class="form">
+     <div class="modal-body">
+      <div class="form-group">
+       <label for="user-details-id" class="font-weight-bold">id</label>
+       <input type="text" class="form-control text-center"
+        id="user-details-id" name="id" th:value="*{id}" disabled />
+      </div>
+      <div class="form-group">
+       <label for="event-details-title" class="font-weight-bold">Title
+       </label> <input type="text" class="form-control text-center"
+        id="event-details-title" name="title" th:value="*{title}"
+        disabled />
+      </div>
+      <div class="form-group">
+       <label for="event-details-price" class="font-weight-bold">Price
+       </label> <input class="form-control text-center" type="number"
+        name="price" id="event-details-price" th:value="*{price}"
+        disabled />
+      </div>
+      <div class="form-group">
+       <label for="event-details-address" class="font-weight-bold">Address</label>
+       <input class="form-control text-center" type="text"
+        name="telephone" id="event-details-price" th:value="*{address}"
+        disabled />
+      </div>
+      <div class="form-group">
+       <label for="event-details-vouchers-count"
+        class="font-weight-bold">Available Vouchers</label> <input
+        class="form-control text-center" type="number" name="vouchersCount"
+        id="event-details-vouchers-count" th:value="*{vouchersCount}"
+        disabled />
+      </div>
+    
+      <div class="form-group">
+       <label for="event-details-description">Description</label>
+       <textarea class="form-control" id="event-details-description"
+        rows="5"></textarea>
+      </div>
+     </div>
+     <div class="modal-footer d-flex justify-content-between">
+      <button type="button" class="btn btn-danger btn-block"
+       data-dismiss="modal" data-toggle="modal"
+       th:data-target="|#event_edit_modal_*{id}|">Edit</button>
+     </div>
+    </form>
+   </div>
+  </div>
+ </div>
 </th:block>

@@ -4,6 +4,7 @@ import static dev.popov.bookify.web.controllers.constants.PathConstants.HOME_PAT
 import static dev.popov.bookify.web.controllers.constants.event.EventBindingConstants.EVENT_CREATE_BINDING_MODEL;
 import static dev.popov.bookify.web.controllers.constants.event.EventPathConstants.BROWSE;
 import static dev.popov.bookify.web.controllers.constants.event.EventPathConstants.CREATE_PATH;
+import static dev.popov.bookify.web.controllers.constants.event.EventPathConstants.EVENTS;
 import static dev.popov.bookify.web.controllers.constants.event.EventPathConstants.FILTER;
 import static dev.popov.bookify.web.controllers.constants.event.EventViewConstants.ALL_EVENTS;
 import static dev.popov.bookify.web.controllers.constants.event.EventViewConstants.BROWSE_EVENTS;
@@ -15,15 +16,19 @@ import java.util.List;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import dev.popov.bookify.domain.model.binding.EventCreateBindingModel;
+import dev.popov.bookify.domain.model.binding.EventEditBindingModel;
 import dev.popov.bookify.domain.model.service.EventServiceModel;
 import dev.popov.bookify.domain.model.service.EventTypeServiceModel;
 import dev.popov.bookify.domain.model.view.EventListViewModel;
@@ -78,5 +83,20 @@ public class EventController extends BaseController {
 	@GetMapping(BROWSE)
 	public ModelAndView browse() {
 		return view(BROWSE_EVENTS);
+	}
+
+	@PutMapping("/edit/{id}")
+	public ModelAndView edit(@PathVariable(name = "id") String id,
+			@ModelAttribute(name = "eventEditBindingModel") EventEditBindingModel eventEditBindingModel) {
+		eventService.edit(id, modelMapper.map(eventEditBindingModel, EventServiceModel.class));
+
+		return redirect(EVENTS);
+	}
+
+	@DeleteMapping("/delete/{id}")
+	public ModelAndView delete(@PathVariable(name = "id") String id) {
+		eventService.delete(id);
+
+		return redirect(EVENTS);
 	}
 }

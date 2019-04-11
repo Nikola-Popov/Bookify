@@ -14,6 +14,7 @@ import dev.popov.bookify.domain.entity.EventType;
 import dev.popov.bookify.domain.model.service.EventServiceModel;
 import dev.popov.bookify.domain.model.service.EventTypeServiceModel;
 import dev.popov.bookify.repository.EventRepository;
+import dev.popov.bookify.service.event.exception.EventNotFoundException;
 
 @Service
 public class EventServiceImpl implements EventService {
@@ -45,5 +46,18 @@ public class EventServiceImpl implements EventService {
 
 		return eventRepository.findAllByEventType(modelMapper.map(eventTypeServiceModel, EventType.class)).stream()
 				.map(event -> modelMapper.map(event, EventServiceModel.class)).collect(toList());
+	}
+
+	@Override
+	public void delete(String id) {
+		eventRepository.deleteById(id);
+	}
+
+	@Override
+	public void edit(String id, EventServiceModel eventServiceModel) {
+		eventRepository.findById(id)
+				.orElseThrow(() -> new EventNotFoundException(String.format("Unable to find event with id=%s", id)));
+		eventServiceModel.setId(id);
+		eventRepository.saveAndFlush(modelMapper.map(eventServiceModel, Event.class));
 	}
 }

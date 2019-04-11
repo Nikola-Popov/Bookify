@@ -11,4 +11,8 @@ public interface EventService {
 	void create(EventServiceModel eventServiceModel);
 
 	List<EventServiceModel> findAllByEventType(EventTypeServiceModel eventTypeServiceModel);
+
+	void delete(String id);
+
+	void edit(String id, EventServiceModel eventServiceModel);
 }

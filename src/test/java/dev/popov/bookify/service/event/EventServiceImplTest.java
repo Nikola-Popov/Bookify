@@ -5,6 +5,8 @@ import static java.util.Arrays.asList;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.Optional;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,9 +20,13 @@ import dev.popov.bookify.domain.entity.EventType;
 import dev.popov.bookify.domain.model.service.EventServiceModel;
 import dev.popov.bookify.domain.model.service.EventTypeServiceModel;
 import dev.popov.bookify.repository.EventRepository;
+import dev.popov.bookify.service.event.exception.EventNotFoundException;
 
 @RunWith(MockitoJUnitRunner.class)
 public class EventServiceImplTest {
+	private static final String MISSING_ID = "missingId";
+	private static final String ID = "id";
+
 	@InjectMocks
 	private EventServiceImpl eventServiceImpl;
 
@@ -41,6 +47,7 @@ public class EventServiceImplTest {
 		when(modelMapperMock.map(eventServiceModelMock, Event.class)).thenReturn(eventMock);
 		when(modelMapperMock.map(eventMock, EventServiceModel.class)).thenReturn(eventServiceModelMock);
 		when(eventRepositoryMock.findAll()).thenReturn(asList(eventMock));
+		when(eventRepositoryMock.findById(ID)).thenReturn(Optional.of(eventMock));
 	}
 
 	@Test
@@ -76,5 +83,26 @@ public class EventServiceImplTest {
 		eventServiceImpl.findAllByEventType(EventTypeServiceModel.ENTERTAINMENT);
 
 		verify(eventRepositoryMock).findAllByEventType(EventType.ENTERTAINMENT);
+	}
+
+	@Test
+	public void testDeleteSuccessfullyRemovesEvent() {
+		eventServiceImpl.delete(ID);
+
+		verify(eventRepositoryMock).deleteById(ID);
+	}
+
+	@Test(expected = EventNotFoundException.class)
+	public void testEditThrowsExceptionBecauseNoEventIsFound() {
+		eventServiceImpl.edit(MISSING_ID, eventServiceModelMock);
+	}
+
+	@Test
+	public void testEditSuccessfullyEditsEvent() {
+		eventServiceImpl.edit(ID, eventServiceModelMock);
+
+		verify(eventRepositoryMock).findById(ID);
+		verify(eventServiceModelMock).setId(ID);
+		verify(eventRepositoryMock).saveAndFlush(eventMock);
 	}
 }

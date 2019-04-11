@@ -1,5 +1,6 @@
 package dev.popov.bookify.service.user;
 
+import static dev.popov.bookify.commons.constants.RoleConstants.ROLE_ROOT;
 import static java.util.Arrays.asList;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -21,6 +22,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import dev.popov.bookify.commons.constants.RoleConstants;
 import dev.popov.bookify.commons.exceptions.MissingUserException;
+import dev.popov.bookify.domain.entity.Contact;
+import dev.popov.bookify.domain.entity.Role;
 import dev.popov.bookify.domain.entity.User;
 import dev.popov.bookify.domain.model.service.ContactServiceModel;
 import dev.popov.bookify.domain.model.service.RoleServiceModel;
@@ -64,6 +67,9 @@ public class UserServiceImplTest {
 	@Mock
 	private ContactServiceModel contactServiceModelMock;
 
+	@Mock
+	private Contact contactMock;
+
 	@Before
 	public void setUp() {
 		when(modelMapperMock.map(userServiceModelMock, User.class)).thenReturn(userMock);
@@ -74,7 +80,7 @@ public class UserServiceImplTest {
 		when(userRepositoryMock.saveAndFlush(userMock)).thenReturn(userMock);
 		when(modelMapperMock.map(userMock, UserServiceModel.class)).thenReturn(userServiceModelMock);
 		when(userRepositoryMock.findById(ID)).thenReturn(Optional.of(userMock));
-		when(roleServiceModelMock.getAuthority()).thenReturn(RoleConstants.ROLE_ROOT);
+		when(modelMapperMock.map(contactServiceModelMock, Contact.class)).thenReturn(contactMock);
 	}
 
 	@Test(expected = UsernameNotFoundException.class)
@@ -135,7 +141,17 @@ public class UserServiceImplTest {
 
 	@Test(expected = AccessDeniedException.class)
 	public void testEditThrowsExceptionWhenEditingRoot() {
+		when(userMock.getAuthorities()).thenReturn(createRootAuthority());
+
 		userServiceImpl.edit(ID, contactServiceModelMock);
+	}
+
+	@Test
+	public void testEditSuccessfullyEditsUserContantDetails() {
+		userServiceImpl.edit(ID, contactServiceModelMock);
+
+		verify(userMock).setContact(contactMock);
+		verify(userRepositoryMock).saveAndFlush(userMock);
 	}
 
 	@Test(expected = MissingUserException.class)
@@ -143,10 +159,23 @@ public class UserServiceImplTest {
 		userServiceImpl.delete(MISSING_ID);
 	}
 
-	// TODO test remaining methods
-	/*
-	 * testEdit delete | delete throws ex root | delete happy
-	 */
+	@Test(expected = AccessDeniedException.class)
+	public void testDeleteThrowsExceptionWhenDeletingRoot() {
+		when(userMock.getAuthorities()).thenReturn(createRootAuthority());
+
+		userServiceImpl.delete(ID);
+	}
+
+	@Test
+	public void testDeleteSuccessfullyDeletesUser() {
+		userServiceImpl.delete(ID);
+
+		verify(userRepositoryMock).deleteById(ID);
+	}
+
+	private Set<Role> createRootAuthority() {
+		return new HashSet<>(asList(new Role(ROLE_ROOT)));
+	}
 
 	private Set<RoleServiceModel> createRolesServiceModels() {
 		final Set<RoleServiceModel> roleServiceModels = new HashSet<>();

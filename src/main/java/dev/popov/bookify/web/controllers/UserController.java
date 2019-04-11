@@ -1,5 +1,9 @@
 package dev.popov.bookify.web.controllers;
 
+import static dev.popov.bookify.web.controllers.constants.AuthorizationConstants.IS_ANONYMOUS;
+import static dev.popov.bookify.web.controllers.constants.view.UserViewConstants.ALL_USERS;
+import static dev.popov.bookify.web.controllers.constants.view.UserViewConstants.LOGIN;
+import static dev.popov.bookify.web.controllers.constants.view.UserViewConstants.REGISTER;
 import static java.util.stream.Collectors.toList;
 
 import java.util.List;
@@ -27,6 +31,10 @@ import dev.popov.bookify.service.user.UserService;
 @Controller
 @RequestMapping("/users")
 public class UserController extends BaseController {
+	private static final String REGISTER_PATH = "/register";
+	private static final String USERS_PATH = "/users";
+	private static final String USER_REGISTER_BINDING_MODEL = "userRegisterBindingModel";
+
 	private final ModelMapper modelMapper;
 	private final UserService userService;
 
@@ -42,30 +50,30 @@ public class UserController extends BaseController {
 				.map(user -> modelMapper.map(user, UserListViewModel.class)).collect(toList());
 		modelAndView.addObject("userListViewModels", userListViewModels);
 
-		return view("all_users", modelAndView);
+		return view(ALL_USERS, modelAndView);
 	}
 
-	@GetMapping("/register")
-	@PreAuthorize("isAnonymous()")
+	@GetMapping(REGISTER_PATH)
+	@PreAuthorize(IS_ANONYMOUS)
 	public ModelAndView register(ModelAndView modelAndView,
-			@ModelAttribute(name = "userRegisterBindingModel") UserRegisterBindingModel userRegisterBindingModel) {
-		modelAndView.addObject("userRegisterBindingModel", userRegisterBindingModel);
-		return view("register", modelAndView);
+			@ModelAttribute(name = USER_REGISTER_BINDING_MODEL) UserRegisterBindingModel userRegisterBindingModel) {
+		modelAndView.addObject(USER_REGISTER_BINDING_MODEL, userRegisterBindingModel);
+		return view(REGISTER, modelAndView);
 	}
 
-	@PostMapping("/register")
-	@PreAuthorize("isAnonymous()")
+	@PostMapping(REGISTER_PATH)
+	@PreAuthorize(IS_ANONYMOUS)
 	public ModelAndView registerConfirm(
-			@ModelAttribute(name = "userRegisterBindingModel") UserRegisterBindingModel userRegisterBindingModel) {
+			@ModelAttribute(name = USER_REGISTER_BINDING_MODEL) UserRegisterBindingModel userRegisterBindingModel) {
 		userService.register(modelMapper.map(userRegisterBindingModel, UserServiceModel.class));
 
 		return redirect("/users/login");
 	}
 
 	@GetMapping("/login")
-	@PreAuthorize("isAnonymous()")
+	@PreAuthorize(IS_ANONYMOUS)
 	public ModelAndView login() {
-		return view("login");
+		return view(LOGIN);
 	}
 
 	@PutMapping("/edit/{id}")
@@ -73,13 +81,13 @@ public class UserController extends BaseController {
 			@ModelAttribute(name = "contactEditBindingModel") ContactEditBindingModel contactEditBindingModel) {
 		userService.edit(id, modelMapper.map(contactEditBindingModel, ContactServiceModel.class));
 
-		return redirect("/users");
+		return redirect(USERS_PATH);
 	}
 
 	@DeleteMapping("/delete/{id}")
 	public ModelAndView delete(@PathVariable(name = "id") String id) {
 		userService.delete(id);
 
-		return redirect("/users");
+		return redirect(USERS_PATH);
 	}
 }

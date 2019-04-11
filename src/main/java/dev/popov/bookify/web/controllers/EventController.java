@@ -1,5 +1,13 @@
 package dev.popov.bookify.web.controllers;
 
+import static dev.popov.bookify.web.controllers.constants.PathConstants.HOME_PATH;
+import static dev.popov.bookify.web.controllers.constants.event.EventBindingConstants.EVENT_CREATE_BINDING_MODEL;
+import static dev.popov.bookify.web.controllers.constants.event.EventPathConstants.BROWSE;
+import static dev.popov.bookify.web.controllers.constants.event.EventPathConstants.CREATE_PATH;
+import static dev.popov.bookify.web.controllers.constants.event.EventPathConstants.FILTER;
+import static dev.popov.bookify.web.controllers.constants.event.EventViewConstants.ALL_EVENTS;
+import static dev.popov.bookify.web.controllers.constants.event.EventViewConstants.BROWSE_EVENTS;
+import static dev.popov.bookify.web.controllers.constants.event.EventViewConstants.CREATE_EVENT;
 import static java.util.stream.Collectors.toList;
 
 import java.util.List;
@@ -33,21 +41,21 @@ public class EventController extends BaseController {
 		this.modelMapper = modelMapper;
 	}
 
-	@GetMapping("/create")
+	@GetMapping(CREATE_PATH)
 	public ModelAndView create(
-			@ModelAttribute(name = "eventCreateBindingModel") EventCreateBindingModel eventCreateBindingModel,
+			@ModelAttribute(name = EVENT_CREATE_BINDING_MODEL) EventCreateBindingModel eventCreateBindingModel,
 			ModelAndView modelAndView) {
-		modelAndView.addObject("eventCreateBindingModel", eventCreateBindingModel);
+		modelAndView.addObject(EVENT_CREATE_BINDING_MODEL, eventCreateBindingModel);
 
-		return view("create_event", modelAndView);
+		return view(CREATE_EVENT, modelAndView);
 	}
 
-	@PostMapping("/create")
+	@PostMapping(CREATE_PATH)
 	public ModelAndView createConfirm(
-			@ModelAttribute(name = "eventCreateBindingModel") EventCreateBindingModel eventCreateBindingModel) {
+			@ModelAttribute(name = EVENT_CREATE_BINDING_MODEL) EventCreateBindingModel eventCreateBindingModel) {
 		eventService.create(modelMapper.map(eventCreateBindingModel, EventServiceModel.class));
 
-		return redirect("/home");
+		return redirect(HOME_PATH);
 	}
 
 	@GetMapping
@@ -57,18 +65,18 @@ public class EventController extends BaseController {
 
 		modelAndView.addObject("eventListViewModels", eventListViewModels);
 
-		return view("all_events", modelAndView);
+		return view(ALL_EVENTS, modelAndView);
 	}
 
-	@GetMapping("/filter")
+	@GetMapping(FILTER)
 	@ResponseBody
 	public List<EventListViewModel> fetchApplyingFilter(@RequestParam(name = "type") String type) {
 		return eventService.findAllByEventType(EventTypeServiceModel.valueOf(type)).stream()
 				.map(event -> modelMapper.map(event, EventListViewModel.class)).collect(toList());
 	}
 
-	@GetMapping("/browse")
+	@GetMapping(BROWSE)
 	public ModelAndView browse() {
-		return view("browse_events");
+		return view(BROWSE_EVENTS);
 	}
 }

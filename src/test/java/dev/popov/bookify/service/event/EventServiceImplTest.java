@@ -6,7 +6,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -69,9 +68,9 @@ public class EventServiceImplTest {
 	}
 
 	@Test
-	@Ignore
 	public void testFindAllByEventTypeReturnsMatchingEvents() {
-		when(modelMapperMock.map(eventServiceModelMock, EventType.class)).thenReturn(EventType.ENTERTAINMENT);
+		when(modelMapperMock.map(EventTypeServiceModel.ENTERTAINMENT, EventType.class))
+				.thenReturn(EventType.ENTERTAINMENT);
 		when(eventRepositoryMock.findAllByEventType(EventType.ENTERTAINMENT)).thenReturn(asList(eventMock));
 
 		eventServiceImpl.findAllByEventType(EventTypeServiceModel.ENTERTAINMENT);

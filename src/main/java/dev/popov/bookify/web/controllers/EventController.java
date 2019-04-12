@@ -31,7 +31,7 @@ import dev.popov.bookify.domain.model.binding.EventCreateBindingModel;
 import dev.popov.bookify.domain.model.binding.EventEditBindingModel;
 import dev.popov.bookify.domain.model.service.EventServiceModel;
 import dev.popov.bookify.domain.model.service.EventTypeServiceModel;
-import dev.popov.bookify.domain.model.view.EventListViewModel;
+import dev.popov.bookify.domain.model.view.EventViewModel;
 import dev.popov.bookify.service.event.EventService;
 
 @Controller
@@ -65,8 +65,8 @@ public class EventController extends BaseController {
 
 	@GetMapping
 	public ModelAndView fetchAll(ModelAndView modelAndView) {
-		final List<EventListViewModel> eventListViewModels = eventService.findAll().stream()
-				.map(event -> modelMapper.map(event, EventListViewModel.class)).collect(toList());
+		final List<EventViewModel> eventListViewModels = eventService.findAll().stream()
+				.map(event -> modelMapper.map(event, EventViewModel.class)).collect(toList());
 
 		modelAndView.addObject("eventListViewModels", eventListViewModels);
 
@@ -75,14 +75,21 @@ public class EventController extends BaseController {
 
 	@GetMapping(FILTER)
 	@ResponseBody
-	public List<EventListViewModel> fetchApplyingFilter(@RequestParam(name = "type") String type) {
+	public List<EventViewModel> fetchApplyingFilter(@RequestParam(name = "type") String type) {
 		return eventService.findAllByEventType(EventTypeServiceModel.valueOf(type)).stream()
-				.map(event -> modelMapper.map(event, EventListViewModel.class)).collect(toList());
+				.map(event -> modelMapper.map(event, EventViewModel.class)).collect(toList());
 	}
 
 	@GetMapping(BROWSE)
 	public ModelAndView browse() {
 		return view(BROWSE_EVENTS);
+	}
+
+	@GetMapping(BROWSE + "/{id}")
+	public ModelAndView browseById(@PathVariable(name = "id") String id, ModelAndView modelAndView) {
+		modelAndView.addObject("eventViewModel", modelMapper.map(eventService.findById(id), EventViewModel.class));
+
+		return view("browse_event", modelAndView);
 	}
 
 	@PutMapping("/edit/{id}")

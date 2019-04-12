@@ -1,7 +1,5 @@
 package dev.popov.bookify.domain.entity;
 
-import static java.time.LocalDate.now;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -39,9 +37,6 @@ public class Event extends BaseEntity {
 
 	@Column(name = "price")
 	private BigDecimal price;
-
-	@Column(name = "created_on", nullable = false, updatable = false)
-	private LocalDate createdOn = now();
 
 	@Column(name = "expires_on")
 	private LocalDate expiresOn;

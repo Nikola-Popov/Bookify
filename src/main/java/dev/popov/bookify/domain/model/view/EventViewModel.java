@@ -10,13 +10,12 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class EventListViewModel extends BaseViewModel {
+public class EventViewModel extends BaseViewModel {
 	private String title;
 	private String address;
 	private EventTypeViewModel eventType;
 	private int vouchersCount;
 	private String description;
 	private BigDecimal price;
-	private LocalDate createdOn;
 	private LocalDate expiresOn;
 }

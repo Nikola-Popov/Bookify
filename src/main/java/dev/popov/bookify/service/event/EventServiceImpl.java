@@ -1,6 +1,7 @@
 package dev.popov.bookify.service.event;
 
 import static dev.popov.bookify.domain.model.service.EventTypeServiceModel.ALL;
+import static java.lang.String.format;
 import static java.util.stream.Collectors.toList;
 
 import java.util.List;
@@ -18,6 +19,7 @@ import dev.popov.bookify.service.event.exception.EventNotFoundException;
 
 @Service
 public class EventServiceImpl implements EventService {
+	private static final String EVENT_NOT_FOUND_BY_ID_ERROR_MESSAGE_TEMPLATE = "Unable to find event with id=%s";
 	private final EventRepository eventRepository;
 	private final ModelMapper modelMapper;
 
@@ -55,9 +57,18 @@ public class EventServiceImpl implements EventService {
 
 	@Override
 	public void edit(String id, EventServiceModel eventServiceModel) {
-		eventRepository.findById(id)
-				.orElseThrow(() -> new EventNotFoundException(String.format("Unable to find event with id=%s", id)));
+		findEventById(id);
 		eventServiceModel.setId(id);
 		eventRepository.saveAndFlush(modelMapper.map(eventServiceModel, Event.class));
+	}
+
+	@Override
+	public EventServiceModel findById(String id) {
+		return modelMapper.map(findEventById(id), EventServiceModel.class);
+	}
+
+	private Event findEventById(String id) {
+		return eventRepository.findById(id).orElseThrow(
+				() -> new EventNotFoundException(format(EVENT_NOT_FOUND_BY_ID_ERROR_MESSAGE_TEMPLATE, id)));
 	}
 }

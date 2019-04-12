@@ -8,6 +8,8 @@ import dev.popov.bookify.domain.model.service.EventTypeServiceModel;
 public interface EventService {
 	List<EventServiceModel> findAll();
 
+	EventServiceModel findById(String id);
+
 	void create(EventServiceModel eventServiceModel);
 
 	List<EventServiceModel> findAllByEventType(EventTypeServiceModel eventTypeServiceModel);

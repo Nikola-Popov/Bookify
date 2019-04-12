@@ -9,12 +9,12 @@
       <span aria-hidden="true">&times;</span>
      </button>
     </div>
-    <form th:id="|user_details_form_*{id}|" class="form">
+    <form th:id="|event_details_form_*{id}|" class="form">
      <div class="modal-body">
       <div class="form-group">
-       <label for="user-details-id" class="font-weight-bold">id</label>
+       <label for="event-details-id" class="font-weight-bold">id</label>
        <input type="text" class="form-control text-center"
-        id="user-details-id" name="id" th:value="*{id}" disabled />
+        id="event-details-id" name="id" th:value="*{id}" disabled />
       </div>
       <div class="form-group">
        <label for="event-details-title" class="font-weight-bold">Title
@@ -41,8 +41,7 @@
         id="event-details-vouchers-count" th:value="*{vouchersCount}"
         disabled />
       </div>
-    
-      <div class="form-group">
+       <div class="form-group">
        <label for="event-details-description">Description</label>
        <textarea class="form-control" id="event-details-description"
         rows="5"></textarea>

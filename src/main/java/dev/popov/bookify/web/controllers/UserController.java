@@ -58,6 +58,7 @@ public class UserController extends BaseController {
 	public ModelAndView register(ModelAndView modelAndView,
 			@ModelAttribute(name = USER_REGISTER_BINDING_MODEL) UserRegisterBindingModel userRegisterBindingModel) {
 		modelAndView.addObject(USER_REGISTER_BINDING_MODEL, userRegisterBindingModel);
+
 		return view(REGISTER, modelAndView);
 	}
 
@@ -65,6 +66,10 @@ public class UserController extends BaseController {
 	@PreAuthorize(IS_ANONYMOUS)
 	public ModelAndView registerConfirm(
 			@ModelAttribute(name = USER_REGISTER_BINDING_MODEL) UserRegisterBindingModel userRegisterBindingModel) {
+		if (!isRegistrationPasswordsMatch(userRegisterBindingModel)) {
+			return view(REGISTER);
+		}
+
 		userService.register(modelMapper.map(userRegisterBindingModel, UserServiceModel.class));
 
 		return redirect("/users/login");
@@ -89,5 +94,9 @@ public class UserController extends BaseController {
 		userService.delete(id);
 
 		return redirect(USERS_PATH);
+	}
+
+	private boolean isRegistrationPasswordsMatch(UserRegisterBindingModel userRegisterBindingModel) {
+		return userRegisterBindingModel.getPassword().equals(userRegisterBindingModel.getConfirmPassword());
 	}
 }

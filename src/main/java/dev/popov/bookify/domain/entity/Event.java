@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Table;
+import javax.validation.constraints.Min;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,7 +31,8 @@ public class Event extends BaseEntity {
 	private EventType eventType;
 
 	@Column(name = "vouchers_count")
-	private int vouchersCount;
+	@Min(value = 1, message = "You must specify atleast 1 available voucher")
+	private int vouchersCount = 1;
 
 	@Column(name = "description")
 	private String description;

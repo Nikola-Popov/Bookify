@@ -1,6 +1,5 @@
 package dev.popov.bookify.web.controllers;
 
-import static dev.popov.bookify.web.controllers.constants.PathConstants.HOME_PATH;
 import static dev.popov.bookify.web.controllers.constants.event.EventBindingConstants.EVENT_CREATE_BINDING_MODEL;
 import static dev.popov.bookify.web.controllers.constants.event.EventPathConstants.BROWSE;
 import static dev.popov.bookify.web.controllers.constants.event.EventPathConstants.CREATE_PATH;
@@ -60,7 +59,7 @@ public class EventController extends BaseController {
 			@ModelAttribute(name = EVENT_CREATE_BINDING_MODEL) EventCreateBindingModel eventCreateBindingModel) {
 		eventService.create(modelMapper.map(eventCreateBindingModel, EventServiceModel.class));
 
-		return redirect(HOME_PATH);
+		return redirect(EVENTS + BROWSE);
 	}
 
 	@GetMapping

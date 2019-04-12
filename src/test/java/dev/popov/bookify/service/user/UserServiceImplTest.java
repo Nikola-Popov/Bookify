@@ -81,6 +81,8 @@ public class UserServiceImplTest {
 		when(modelMapperMock.map(userMock, UserServiceModel.class)).thenReturn(userServiceModelMock);
 		when(userRepositoryMock.findById(ID)).thenReturn(Optional.of(userMock));
 		when(modelMapperMock.map(contactServiceModelMock, Contact.class)).thenReturn(contactMock);
+		when(userMock.getContact()).thenReturn(contactMock);
+		when(contactMock.getId()).thenReturn(ID);
 	}
 
 	@Test(expected = UsernameNotFoundException.class)
@@ -151,6 +153,7 @@ public class UserServiceImplTest {
 		userServiceImpl.edit(ID, contactServiceModelMock);
 
 		verify(userMock).setContact(contactMock);
+		verify(contactServiceModelMock).setId(ID);
 		verify(userRepositoryMock).saveAndFlush(userMock);
 	}
 

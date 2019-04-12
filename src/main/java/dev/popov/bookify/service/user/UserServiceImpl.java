@@ -74,6 +74,7 @@ public class UserServiceImpl implements UserService {
 		final User user = userRepository.findById(id)
 				.orElseThrow(() -> new MissingUserException(UNABLE_TO_FIND_USER_BY_ID_MESSAGE));
 		forbidActionOnRoot(user);
+		contactServiceModel.setId(user.getContact().getId());
 		user.setContact(modelMapper.map(contactServiceModel, Contact.class));
 
 		userRepository.saveAndFlush(user);

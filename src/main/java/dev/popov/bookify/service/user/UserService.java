@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.springframework.security.core.userdetails.UserDetailsService;
 
-import dev.popov.bookify.domain.model.service.ContactServiceModel;
+import dev.popov.bookify.domain.model.service.UserEditServiceModel;
 import dev.popov.bookify.domain.model.service.UserServiceModel;
 
 public interface UserService extends UserDetailsService {
@@ -12,7 +12,7 @@ public interface UserService extends UserDetailsService {
 
 	List<UserServiceModel> findAll();
 
-	void edit(String id, ContactServiceModel contactServiceModel);
+	void edit(String id, UserEditServiceModel userEditServiceModel);
 
 	void delete(String id);
 }

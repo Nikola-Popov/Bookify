@@ -6,6 +6,7 @@ import static dev.popov.bookify.web.controllers.constants.view.UserViewConstants
 import static dev.popov.bookify.web.controllers.constants.view.UserViewConstants.REGISTER;
 import static java.util.stream.Collectors.toList;
 
+import java.security.Principal;
 import java.util.List;
 
 import org.modelmapper.ModelMapper;
@@ -22,10 +23,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import dev.popov.bookify.domain.model.binding.ContactEditBindingModel;
+import dev.popov.bookify.domain.model.binding.UserEditBindingModel;
 import dev.popov.bookify.domain.model.binding.UserRegisterBindingModel;
-import dev.popov.bookify.domain.model.service.ContactServiceModel;
+import dev.popov.bookify.domain.model.service.UserEditServiceModel;
 import dev.popov.bookify.domain.model.service.UserServiceModel;
 import dev.popov.bookify.domain.model.view.UserListViewModel;
+import dev.popov.bookify.domain.model.view.UserSettingsViewModel;
 import dev.popov.bookify.service.user.UserService;
 
 @Controller
@@ -84,8 +87,9 @@ public class UserController extends BaseController {
 	@PutMapping("/edit/{id}")
 	public ModelAndView edit(@PathVariable(name = "id") String id,
 			@ModelAttribute(name = "contactEditBindingModel") ContactEditBindingModel contactEditBindingModel) {
-		userService.edit(id, modelMapper.map(contactEditBindingModel, ContactServiceModel.class));
-
+		// userService.edit(id, modelMapper.map(contactEditBindingModel,
+		// ContactServiceModel.class));
+		//
 		return redirect(USERS_PATH);
 	}
 
@@ -94,6 +98,22 @@ public class UserController extends BaseController {
 		userService.delete(id);
 
 		return redirect(USERS_PATH);
+	}
+
+	@GetMapping("/profile/settings")
+	public ModelAndView settings(Principal principal, ModelAndView modelAndView) {
+		modelAndView.addObject("userSettingsViewModel",
+				modelMapper.map(userService.loadUserByUsername(principal.getName()), UserSettingsViewModel.class));
+
+		return view("user_settings", modelAndView);
+	}
+
+	@PostMapping("/profile/settings/{id}")
+	public ModelAndView settingsConfirm(@PathVariable(name = "id") String id,
+			@ModelAttribute(name = "userEditBindingModel") UserEditBindingModel userEditBindingModel) {
+		userService.edit(id, modelMapper.map(userEditBindingModel, UserEditServiceModel.class));
+
+		return redirect("/users/profile/settings");
 	}
 
 	private boolean isRegistrationPasswordsMatch(UserRegisterBindingModel userRegisterBindingModel) {

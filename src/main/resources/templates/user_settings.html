@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+ xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<th:block th:include="~{fragments/head}"></th:block>
+<script th:src="@{/vendor/bootstrap/js/bootstrap.min.js}"></script>
+</head>
+<body id="page-top">
+ <th:block th:include="~{fragments/navbar}"></th:block>
+ <div class="container">
+  <div class="row">
+   <div class="col-md-3 ">
+    <div class="text-center">
+     <img src="http://ssl.gstatic.com/accounts/ui/avatar_2x.png"
+      class="avatar img-circle img-thumbnail" alt="avatar"> <input
+      type="file" class="text-center center-block file-upload mt-3">
+    </div>
+    <br />
+
+    <div class="list-group mt-5">
+     <div
+      class="d-sm-flex align-items-center justify-content-between mb-3">
+      <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
+     </div>
+     <a href="#" class="list-group-item list-group-item-action active">User
+      settings</a> <a th:href="@{/users/profile/settings}"
+      class="list-group-item list-group-item-action">Change password</a>
+     <a href="#" class="list-group-item list-group-item-action">Notifications</a>
+    </div>
+   </div>
+   <div class="col-md-9">
+    <div class="card">
+     <div class="card-body">
+      <div class="row">
+       <div class="col-md-12">
+        <h4>Your Profile</h4>
+        <hr>
+       </div>
+      </div>
+      <form th:object="${userSettingsViewModel}"
+       th:action="@{'/users/profile/settings/' + *{id}}"
+       th:method="post">
+       <div class="row">
+        <div class="col-md-12">
+         <div class="form-group row">
+          <label for="username" class="col-4 col-form-label">User
+           Name</label>
+          <div class="col-8">
+           <input id="username" th:field="*{username}"
+            placeholder="Username" class="form-control here" type="text"
+            >
+          </div>
+         </div>
+         <div class="form-group row">
+          <label for="name" class="col-4 col-form-label">First
+           Name</label>
+          <div class="col-8">
+           <input id="name" name="name" placeholder="First Name"
+            class="form-control here" type="text"
+            th:field="*{contact.firstName}">
+          </div>
+         </div>
+         <div class="form-group row">
+          <label for="lastname" class="col-4 col-form-label">Last
+           Name</label>
+          <div class="col-8">
+           <input id="lastname" name="lastname" placeholder="Last Name"
+            class="form-control here" type="text"
+            th:field="*{contact.lastName}">
+          </div>
+         </div>
+         <div class="form-group row">
+          <label for="text" class="col-4 col-form-label">Telephone
+          </label>
+          <div class="col-8">
+           <input id="text" name="text" placeholder="Telephone"
+            class="form-control here" type="text"
+            th:field="*{contact.telephone}">
+          </div>
+         </div>
+         <div class="form-group row">
+          <label for="email" class="col-4 col-form-label">Email</label>
+          <div class="col-8">
+           <input id="email" name="email" placeholder="Email"
+            class="form-control here" type="text"
+            th:field="*{contact.email}">
+          </div>
+         </div>
+         <div class="form-group row">
+          <label for="website" class="col-4 col-form-label">Address</label>
+          <div class="col-8">
+           <input id="website" name="website" placeholder="address"
+            class="form-control here" type="text"
+            th:field="*{contact.address}">
+          </div>
+         </div>
+         <div class="form-group row">
+          <div class="offset-4 col-8">
+           <button type="submit" class="btn btn-primary  btn-block">Update</button>
+          </div>
+         </div>
+
+        </div>
+       </div>
+      </form>
+     </div>
+    </div>
+   </div>
+  </div>
+ </div>
+
+
+ <th:block th:include="~{fragments/logout_modal}"></th:block>
+ <th:block th:include="~{fragments/core_js_imports}"></th:block>
+ <script>
+		$(document).ready(function() {
+
+			var readURL = function(input) {
+				if (input.files && input.files[0]) {
+					var reader = new FileReader();
+
+					reader.onload = function(e) {
+						$('.avatar').attr('src', e.target.result);
+					}
+
+					reader.readAsDataURL(input.files[0]);
+				}
+			}
+
+			$(".file-upload").on('change', function() {
+				readURL(this);
+			});
+		});
+	</script>
+ <th:block th:include="~{fragments/footer}"></th:block>
+
+ <a class="scroll-to-top rounded" href="#page-top"> <i
+  class="fas fa-angle-up"></i>
+ </a>
+
+ <th:block th:include="~{fragments/logout_modal}"></th:block>
+ <th:block th:include="~{fragments/core_js_imports}"></th:block>
+
+</body>
+</html>

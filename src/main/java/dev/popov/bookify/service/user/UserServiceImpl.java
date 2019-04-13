@@ -16,7 +16,7 @@ import dev.popov.bookify.commons.constants.RoleConstants;
 import dev.popov.bookify.commons.exceptions.MissingUserException;
 import dev.popov.bookify.domain.entity.Contact;
 import dev.popov.bookify.domain.entity.User;
-import dev.popov.bookify.domain.model.service.ContactServiceModel;
+import dev.popov.bookify.domain.model.service.UserEditServiceModel;
 import dev.popov.bookify.domain.model.service.UserServiceModel;
 import dev.popov.bookify.repository.UserRepository;
 import dev.popov.bookify.service.role.RoleService;
@@ -70,12 +70,13 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public void edit(String id, ContactServiceModel contactServiceModel) {
+	public void edit(String id, UserEditServiceModel userEditServiceModel) {
 		final User user = userRepository.findById(id)
 				.orElseThrow(() -> new MissingUserException(UNABLE_TO_FIND_USER_BY_ID_MESSAGE));
 		forbidActionOnRoot(user);
-		contactServiceModel.setId(user.getContact().getId());
-		user.setContact(modelMapper.map(contactServiceModel, Contact.class));
+		userEditServiceModel.getContact().setId(user.getContact().getId());
+		user.setContact(modelMapper.map(userEditServiceModel.getContact(), Contact.class));
+		user.setUsername(userEditServiceModel.getUsername());
 
 		userRepository.saveAndFlush(user);
 	}

@@ -40,7 +40,7 @@
       </div>
       <form th:object="${userSettingsViewModel}"
        th:action="@{'/users/profile/settings/' + *{id}}"
-       th:method="post">
+       th:method="put">
        <div class="row">
         <div class="col-md-12">
          <div class="form-group row">

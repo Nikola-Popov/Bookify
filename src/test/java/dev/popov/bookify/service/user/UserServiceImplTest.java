@@ -27,6 +27,7 @@ import dev.popov.bookify.domain.entity.Role;
 import dev.popov.bookify.domain.entity.User;
 import dev.popov.bookify.domain.model.service.ContactServiceModel;
 import dev.popov.bookify.domain.model.service.RoleServiceModel;
+import dev.popov.bookify.domain.model.service.UserEditServiceModel;
 import dev.popov.bookify.domain.model.service.UserServiceModel;
 import dev.popov.bookify.repository.UserRepository;
 import dev.popov.bookify.service.role.RoleService;
@@ -65,6 +66,9 @@ public class UserServiceImplTest {
 	private UserServiceModel userServiceModelMock;
 
 	@Mock
+	private UserEditServiceModel userEditServiceModel;
+
+	@Mock
 	private ContactServiceModel contactServiceModelMock;
 
 	@Mock
@@ -83,6 +87,7 @@ public class UserServiceImplTest {
 		when(modelMapperMock.map(contactServiceModelMock, Contact.class)).thenReturn(contactMock);
 		when(userMock.getContact()).thenReturn(contactMock);
 		when(contactMock.getId()).thenReturn(ID);
+		when(userEditServiceModel.getContact()).thenReturn(contactServiceModelMock);
 	}
 
 	@Test(expected = UsernameNotFoundException.class)
@@ -138,19 +143,19 @@ public class UserServiceImplTest {
 
 	@Test(expected = MissingUserException.class)
 	public void testEditThrowsExceptionBecauseOfMissingUserId() {
-		userServiceImpl.edit(MISSING_ID, contactServiceModelMock);
+		userServiceImpl.edit(MISSING_ID, userEditServiceModel);
 	}
 
 	@Test(expected = AccessDeniedException.class)
 	public void testEditThrowsExceptionWhenEditingRoot() {
 		when(userMock.getAuthorities()).thenReturn(createRootAuthority());
 
-		userServiceImpl.edit(ID, contactServiceModelMock);
+		userServiceImpl.edit(ID, userEditServiceModel);
 	}
 
 	@Test
 	public void testEditSuccessfullyEditsUserContantDetails() {
-		userServiceImpl.edit(ID, contactServiceModelMock);
+		userServiceImpl.edit(ID, userEditServiceModel);
 
 		verify(userMock).setContact(contactMock);
 		verify(contactServiceModelMock).setId(ID);

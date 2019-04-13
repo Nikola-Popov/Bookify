@@ -9,6 +9,7 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Table;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,6 +22,7 @@ import lombok.Setter;
 @Table(name = "events")
 public class Event extends BaseEntity {
 	@Column(name = "title", nullable = false)
+	@NotEmpty
 	private String title;
 
 	@Column(name = "address")
@@ -35,9 +37,11 @@ public class Event extends BaseEntity {
 	private int vouchersCount = 1;
 
 	@Column(name = "description")
+	@NotEmpty
 	private String description;
 
 	@Column(name = "price")
+	@Min(value = 0, message = "Invalid funds")
 	private BigDecimal price;
 
 	@Column(name = "expires_on")

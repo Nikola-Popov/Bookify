@@ -24,7 +24,10 @@ public class EventEditBindingModel {
 	private EventTypeBindingModel eventType;
 	@Min(value = 1, message = "You must specify atleast 1 available voucher")
 	private int vouchersCount;
+	@NotEmpty
+	@NotNull
 	private String description;
+	@Min(value = 0, message = "Invalid funds")
 	private BigDecimal price;
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate expiresOn;

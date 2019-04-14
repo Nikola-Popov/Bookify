@@ -75,7 +75,7 @@ public class UserServiceImpl implements UserService {
 	public void edit(String id, UserEditServiceModel userEditServiceModel) {
 		final User user = userRepository.findById(id)
 				.orElseThrow(() -> new MissingUserException(UNABLE_TO_FIND_USER_BY_ID_MESSAGE));
-		// forbidActionOnRoot(user);
+		forbidActionOnRoot(user);
 
 		final ContactServiceModel contact = userEditServiceModel.getContact();
 		if (contact != null) {

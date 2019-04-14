@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import dev.popov.bookify.domain.model.binding.UserEditBindingModel;
+import dev.popov.bookify.domain.model.binding.UserPasswordChangeBindingModel;
 import dev.popov.bookify.domain.model.binding.UserRegisterBindingModel;
 import dev.popov.bookify.domain.model.service.UserEditServiceModel;
 import dev.popov.bookify.domain.model.service.UserServiceModel;
@@ -68,7 +69,7 @@ public class UserController extends BaseController {
 	@PreAuthorize(IS_ANONYMOUS)
 	public ModelAndView registerConfirm(
 			@ModelAttribute(name = USER_REGISTER_BINDING_MODEL) UserRegisterBindingModel userRegisterBindingModel) {
-		if (!isRegistrationPasswordsMatch(userRegisterBindingModel)) {
+		if (!passwordsMatch(userRegisterBindingModel.getPassword(), userRegisterBindingModel.getConfirmPassword())) {
 			return view(REGISTER);
 		}
 
@@ -114,7 +115,37 @@ public class UserController extends BaseController {
 		return redirect("/users/profile/settings");
 	}
 
-	private boolean isRegistrationPasswordsMatch(UserRegisterBindingModel userRegisterBindingModel) {
-		return userRegisterBindingModel.getPassword().equals(userRegisterBindingModel.getConfirmPassword());
+	@GetMapping("/profile/settings/password")
+	public ModelAndView changePassword(
+			@ModelAttribute(name = "userPasswordChangeBindingModel") UserPasswordChangeBindingModel userPasswordChangeBindingModel,
+			ModelAndView modelAndView) {
+		modelAndView.addObject("userPasswordChangeBindingModel", userPasswordChangeBindingModel);
+
+		return view("user_settings_change_password", modelAndView);
+	}
+
+	@PutMapping("/profile/settings/password")
+	public ModelAndView changePasswordConfirm(Principal principal,
+			UserPasswordChangeBindingModel userPasswordChangeBindingModel) {
+		if (!passwordsMatch(userPasswordChangeBindingModel.getNewPassword(),
+				userPasswordChangeBindingModel.getConfirmNewPassword())) {
+			return view("/profile/settings/password/");
+		}
+
+		if (passwordsMatch(userPasswordChangeBindingModel.getPassword(),
+				userPasswordChangeBindingModel.getNewPassword())) {
+			return view("/profile/settings/password/");
+		}
+
+		userPasswordChangeBindingModel.setPassword(userPasswordChangeBindingModel.getNewPassword());
+		userService.edit(
+				modelMapper.map(userService.loadUserByUsername(principal.getName()), UserServiceModel.class).getId(),
+				modelMapper.map(userPasswordChangeBindingModel, UserEditServiceModel.class));
+
+		return redirect("/users/profile/settings/password");
+	}
+
+	private boolean passwordsMatch(String password, String confirmPassword) {
+		return password != null && password.equals(confirmPassword);
 	}
 }

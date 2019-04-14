@@ -10,4 +10,5 @@ import lombok.Setter;
 public class UserEditServiceModel extends BaseServiceModel {
 	private String username;
 	private ContactServiceModel contact;
+	private String password;
 }

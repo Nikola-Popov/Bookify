@@ -1,4 +1,4 @@
-package dev.popov.bookify.domain.model.view;
+package dev.popov.bookify.domain.model.binding;
 
 import org.springframework.web.multipart.MultipartFile;
 
@@ -9,8 +9,6 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class UserSettingsViewModel extends BaseViewModel {
-	private String username;
-	private ContactViewModel contact;
+public class UserSettingsEditBindingModel extends UserEditBindingModel {
 	private MultipartFile image;
 }

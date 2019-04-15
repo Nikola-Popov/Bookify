@@ -41,6 +41,9 @@ public class User extends BaseEntity implements UserDetails {
 	@JoinColumn(name = "contact_id")
 	private Contact contact;
 
+	@Column(name = "image")
+	private String image;
+
 	@Override
 	@Transient
 	public boolean isAccountNonExpired() {

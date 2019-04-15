@@ -9,39 +9,42 @@
 <body id="page-top">
  <th:block th:include="~{fragments/navbar}"></th:block>
  <div class="container">
-  <div class="row">
-   <div class="col-md-3 ">
-    <div class="text-center">
-     <img src="http://ssl.gstatic.com/accounts/ui/avatar_2x.png"
-      class="avatar img-circle img-thumbnail" alt="avatar"> <input
-      type="file" class="text-center center-block file-upload mt-3">
-    </div>
-    <br />
-
-    <div class="list-group mt-5">
-     <div
-      class="d-sm-flex align-items-center justify-content-between mb-3">
-      <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
+  <form th:object="${userSettingsViewModel}"
+   th:action="@{'/users/profile/settings/' + *{id}}" th:method="put"
+   enctype="multipart/form-data">
+   <div class="row">
+    <div class="col-md-3 ">
+     <div class="text-center">
+      <img src="http://ssl.gstatic.com/accounts/ui/avatar_2x.png"
+       class="avatar img-circle img-thumbnail" alt="avatar"> <input
+       type="file" class="text-center center-block file-upload mt-3"
+       th:field="*{image}">
      </div>
-     <a th:href="@{/users/profile/settings}"
-      class="list-group-item list-group-item-action active">User
-      settings</a> <a th:href="@{/users/profile/settings/password}"
-      class="list-group-item list-group-item-action ">Change
-      password</a> <a href="#"
-      class="list-group-item list-group-item-action">Notifications</a>
-    </div>
-   </div>
-   <div class="col-md-9">
-    <div class="card">
-     <div class="card-body">
-      <div class="row">
-       <div class="col-md-12">
-        <h4>Your Profile</h4>
-        <hr>
-       </div>
+     <br />
+
+     <div class="list-group mt-5">
+      <div
+       class="d-sm-flex align-items-center justify-content-between mb-3">
+       <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
       </div>
-      <form th:object="${userSettingsViewModel}"
-       th:action="@{'/users/profile/settings/' + *{id}}" th:method="put">
+      <a th:href="@{/users/profile/settings}"
+       class="list-group-item list-group-item-action active">User
+       settings</a> <a th:href="@{/users/profile/settings/password}"
+       class="list-group-item list-group-item-action ">Change
+       password</a> <a href="#"
+       class="list-group-item list-group-item-action">Notifications</a>
+     </div>
+    </div>
+    <div class="col-md-9">
+     <div class="card">
+      <div class="card-body">
+       <div class="row">
+        <div class="col-md-12">
+         <h4>Your Profile</h4>
+         <hr>
+        </div>
+       </div>
+
        <div class="row">
         <div class="col-md-12">
          <div class="form-group row">
@@ -103,11 +106,11 @@
 
         </div>
        </div>
-      </form>
+      </div>
      </div>
     </div>
    </div>
-  </div>
+  </form>
  </div>
 
 

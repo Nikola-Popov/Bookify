@@ -1,5 +1,6 @@
 package dev.popov.bookify.service.user;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -12,7 +13,7 @@ public interface UserService extends UserDetailsService {
 
 	List<UserServiceModel> findAll();
 
-	void edit(String id, UserEditServiceModel userEditServiceModel);
+	void edit(String id, UserEditServiceModel userEditServiceModel) throws IOException;
 
 	void delete(String id);
 }

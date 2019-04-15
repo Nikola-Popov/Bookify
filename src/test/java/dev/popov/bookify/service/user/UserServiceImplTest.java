@@ -5,6 +5,7 @@ import static java.util.Arrays.asList;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -19,6 +20,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.multipart.MultipartFile;
 
 import dev.popov.bookify.commons.constants.RoleConstants;
 import dev.popov.bookify.commons.exceptions.MissingUserException;
@@ -30,10 +32,12 @@ import dev.popov.bookify.domain.model.service.RoleServiceModel;
 import dev.popov.bookify.domain.model.service.UserEditServiceModel;
 import dev.popov.bookify.domain.model.service.UserServiceModel;
 import dev.popov.bookify.repository.UserRepository;
+import dev.popov.bookify.service.cloud.CloudinaryService;
 import dev.popov.bookify.service.role.RoleService;
 
 @RunWith(MockitoJUnitRunner.class)
 public class UserServiceImplTest {
+	private static final String IMAGE_URL = "imageUrl";
 	private static final String MISSING_ID = "missingId";
 	private static final String ID = "id";
 	private static final String ENCODED_PASSWORD = "encodedPassword";
@@ -66,7 +70,7 @@ public class UserServiceImplTest {
 	private UserServiceModel userServiceModelMock;
 
 	@Mock
-	private UserEditServiceModel userEditServiceModel;
+	private UserEditServiceModel userEditServiceModelMock;
 
 	@Mock
 	private ContactServiceModel contactServiceModelMock;
@@ -74,20 +78,38 @@ public class UserServiceImplTest {
 	@Mock
 	private Contact contactMock;
 
+	@Mock
+	private CloudinaryService cloudinaryServiceMock;
+
+	@Mock
+	private MultipartFile multipartFileMock;
+
 	@Before
-	public void setUp() {
+	public void setUp() throws Exception {
 		when(modelMapperMock.map(userServiceModelMock, User.class)).thenReturn(userMock);
-		when(userServiceModelMock.getPassword()).thenReturn(PASSWORD);
-		when(bCryptPasswordEncoderMock.encode(PASSWORD)).thenReturn(ENCODED_PASSWORD);
-		when(roleServiceMock.findByAuthority(RoleConstants.ROLE_USER)).thenReturn(roleServiceModelMock);
-		when(userServiceModelMock.getAuthorities()).thenReturn(new HashSet<>());
-		when(userRepositoryMock.saveAndFlush(userMock)).thenReturn(userMock);
 		when(modelMapperMock.map(userMock, UserServiceModel.class)).thenReturn(userServiceModelMock);
-		when(userRepositoryMock.findById(ID)).thenReturn(Optional.of(userMock));
 		when(modelMapperMock.map(contactServiceModelMock, Contact.class)).thenReturn(contactMock);
+
+		when(userServiceModelMock.getPassword()).thenReturn(PASSWORD);
+		when(userServiceModelMock.getAuthorities()).thenReturn(new HashSet<>());
+
+		when(userEditServiceModelMock.getUsername()).thenReturn(USERNAME);
+		when(userEditServiceModelMock.getContact()).thenReturn(contactServiceModelMock);
+		when(userEditServiceModelMock.getImage()).thenReturn(multipartFileMock);
+		when(userEditServiceModelMock.getPassword()).thenReturn(PASSWORD);
+
+		when(bCryptPasswordEncoderMock.encode(PASSWORD)).thenReturn(ENCODED_PASSWORD);
+
+		when(roleServiceMock.findByAuthority(RoleConstants.ROLE_USER)).thenReturn(roleServiceModelMock);
+
+		when(userRepositoryMock.saveAndFlush(userMock)).thenReturn(userMock);
+		when(userRepositoryMock.findById(ID)).thenReturn(Optional.of(userMock));
+
 		when(userMock.getContact()).thenReturn(contactMock);
+
 		when(contactMock.getId()).thenReturn(ID);
-		when(userEditServiceModel.getContact()).thenReturn(contactServiceModelMock);
+
+		when(cloudinaryServiceMock.uploadImage(multipartFileMock)).thenReturn(IMAGE_URL);
 	}
 
 	@Test(expected = UsernameNotFoundException.class)
@@ -142,23 +164,27 @@ public class UserServiceImplTest {
 	}
 
 	@Test(expected = MissingUserException.class)
-	public void testEditThrowsExceptionBecauseOfMissingUserId() {
-		userServiceImpl.edit(MISSING_ID, userEditServiceModel);
+	public void testEditThrowsExceptionBecauseOfMissingUserId() throws IOException {
+		userServiceImpl.edit(MISSING_ID, userEditServiceModelMock);
 	}
 
 	@Test(expected = AccessDeniedException.class)
-	public void testEditThrowsExceptionWhenEditingRoot() {
+	public void testEditThrowsExceptionWhenEditingRoot() throws IOException {
 		when(userMock.getAuthorities()).thenReturn(createRootAuthority());
 
-		userServiceImpl.edit(ID, userEditServiceModel);
+		userServiceImpl.edit(ID, userEditServiceModelMock);
 	}
 
 	@Test
-	public void testEditSuccessfullyEditsUserContantDetails() {
-		userServiceImpl.edit(ID, userEditServiceModel);
+	public void testEditSuccessfullyEditsUserContantDetails() throws IOException {
+		userServiceImpl.edit(ID, userEditServiceModelMock);
 
+		verify(userMock).setUsername(USERNAME);
 		verify(userMock).setContact(contactMock);
 		verify(contactServiceModelMock).setId(ID);
+		verify(userMock).setPassword(ENCODED_PASSWORD);
+		verify(userMock).setImage(IMAGE_URL);
+		verify(userMock).setContact(contactMock);
 		verify(userRepositoryMock).saveAndFlush(userMock);
 	}
 

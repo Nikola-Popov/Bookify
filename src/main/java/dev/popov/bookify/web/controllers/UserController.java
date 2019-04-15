@@ -6,12 +6,14 @@ import static dev.popov.bookify.web.controllers.constants.view.UserViewConstants
 import static dev.popov.bookify.web.controllers.constants.view.UserViewConstants.REGISTER;
 import static java.util.stream.Collectors.toList;
 
+import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,6 +27,7 @@ import org.springframework.web.servlet.ModelAndView;
 import dev.popov.bookify.domain.model.binding.UserEditBindingModel;
 import dev.popov.bookify.domain.model.binding.UserPasswordChangeBindingModel;
 import dev.popov.bookify.domain.model.binding.UserRegisterBindingModel;
+import dev.popov.bookify.domain.model.binding.UserSettingsEditBindingModel;
 import dev.popov.bookify.domain.model.service.UserEditServiceModel;
 import dev.popov.bookify.domain.model.service.UserServiceModel;
 import dev.popov.bookify.domain.model.view.UserListViewModel;
@@ -86,7 +89,8 @@ public class UserController extends BaseController {
 
 	@PutMapping("/edit/{id}")
 	public ModelAndView edit(@PathVariable(name = "id") String id,
-			@ModelAttribute(name = "userEditBindingModel") UserEditBindingModel userEditBindingModel) {
+			@ModelAttribute(name = "userEditBindingModel") UserEditBindingModel userEditBindingModel)
+			throws IOException {
 		userService.edit(id, modelMapper.map(userEditBindingModel, UserEditServiceModel.class));
 
 		return redirect(USERS_PATH);
@@ -109,8 +113,9 @@ public class UserController extends BaseController {
 
 	@PutMapping("/profile/settings/{id}")
 	public ModelAndView settingsConfirm(@PathVariable(name = "id") String id,
-			@ModelAttribute(name = "userEditBindingModel") UserEditBindingModel userEditBindingModel) {
-		userService.edit(id, modelMapper.map(userEditBindingModel, UserEditServiceModel.class));
+			@ModelAttribute(name = "userEditBindingModel") UserSettingsEditBindingModel userSettingsEditBindingModel)
+			throws IOException {
+		userService.edit(id, modelMapper.map(userSettingsEditBindingModel, UserEditServiceModel.class));
 
 		return redirect("/users/profile/settings");
 	}
@@ -126,7 +131,8 @@ public class UserController extends BaseController {
 
 	@PutMapping("/profile/settings/password")
 	public ModelAndView changePasswordConfirm(Principal principal,
-			UserPasswordChangeBindingModel userPasswordChangeBindingModel) {
+			UserPasswordChangeBindingModel userPasswordChangeBindingModel)
+			throws UsernameNotFoundException, IOException {
 		if (!passwordsMatch(userPasswordChangeBindingModel.getNewPassword(),
 				userPasswordChangeBindingModel.getConfirmNewPassword())) {
 			return view("/profile/settings/password/");

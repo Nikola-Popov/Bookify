@@ -3,6 +3,7 @@ package dev.popov.bookify.service.user;
 import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.modelmapper.ModelMapper;
@@ -21,6 +22,7 @@ import dev.popov.bookify.domain.model.service.ContactServiceModel;
 import dev.popov.bookify.domain.model.service.UserEditServiceModel;
 import dev.popov.bookify.domain.model.service.UserServiceModel;
 import dev.popov.bookify.repository.UserRepository;
+import dev.popov.bookify.service.cloud.CloudinaryService;
 import dev.popov.bookify.service.role.RoleService;
 
 @Service
@@ -33,14 +35,16 @@ public class UserServiceImpl implements UserService {
 	private final RoleService roleService;
 	private final ModelMapper modelMapper;
 	private final BCryptPasswordEncoder bCryptPasswordEncoder;
+	private final CloudinaryService cloudinaryService;
 
 	@Autowired
 	public UserServiceImpl(UserRepository userRepository, RoleService roleService, ModelMapper modelMapper,
-			BCryptPasswordEncoder bCryptPasswordEncoder) {
+			BCryptPasswordEncoder bCryptPasswordEncoder, CloudinaryService cloudinaryService) {
 		this.userRepository = userRepository;
 		this.roleService = roleService;
 		this.modelMapper = modelMapper;
 		this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+		this.cloudinaryService = cloudinaryService;
 	}
 
 	@Override
@@ -72,7 +76,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public void edit(String id, UserEditServiceModel userEditServiceModel) {
+	public void edit(String id, UserEditServiceModel userEditServiceModel) throws IOException {
 		final User user = userRepository.findById(id)
 				.orElseThrow(() -> new MissingUserException(UNABLE_TO_FIND_USER_BY_ID_MESSAGE));
 		forbidActionOnRoot(user);
@@ -89,6 +93,10 @@ public class UserServiceImpl implements UserService {
 
 		if (isNotBlank(userEditServiceModel.getPassword())) {
 			user.setPassword(bCryptPasswordEncoder.encode(userEditServiceModel.getPassword()));
+		}
+
+		if (userEditServiceModel.getImage() != null) {
+			user.setImage(cloudinaryService.uploadImage(userEditServiceModel.getImage()));
 		}
 
 		userRepository.saveAndFlush(user);

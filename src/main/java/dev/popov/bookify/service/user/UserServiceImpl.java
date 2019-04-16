@@ -1,5 +1,6 @@
 package dev.popov.bookify.service.user;
 
+import static dev.popov.bookify.commons.constants.RoleConstants.ROLE_ROOT;
 import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
@@ -8,7 +9,6 @@ import java.util.List;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -16,7 +16,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import dev.popov.bookify.commons.constants.RoleConstants;
-import dev.popov.bookify.commons.exceptions.MissingUserException;
+import dev.popov.bookify.commons.exceptions.ForbiddenActionOnRootException;
+import dev.popov.bookify.commons.exceptions.UserNotFoundException;
 import dev.popov.bookify.domain.entity.Contact;
 import dev.popov.bookify.domain.entity.User;
 import dev.popov.bookify.domain.model.service.ContactServiceModel;
@@ -79,7 +80,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public void edit(String id, UserEditServiceModel userEditServiceModel) throws IOException {
 		final User user = userRepository.findById(id)
-				.orElseThrow(() -> new MissingUserException(UNABLE_TO_FIND_USER_BY_ID_MESSAGE));
+				.orElseThrow(() -> new UserNotFoundException(UNABLE_TO_FIND_USER_BY_ID_MESSAGE));
 		forbidActionOnRoot(user);
 
 		final ContactServiceModel contact = userEditServiceModel.getContact();
@@ -106,7 +107,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public void delete(String id) {
 		forbidActionOnRoot(userRepository.findById(id)
-				.orElseThrow(() -> new MissingUserException(UNABLE_TO_FIND_USER_BY_ID_MESSAGE)));
+				.orElseThrow(() -> new UserNotFoundException(UNABLE_TO_FIND_USER_BY_ID_MESSAGE)));
 		userRepository.deleteById(id);
 	}
 
@@ -115,9 +116,8 @@ public class UserServiceImpl implements UserService {
 	}
 
 	private void forbidActionOnRoot(final User user) {
-		if (user.getAuthorities().stream()
-				.anyMatch(role -> role.getAuthority().equalsIgnoreCase(RoleConstants.ROLE_ROOT))) {
-			throw new AccessDeniedException(NOT_ELIGIBLE_TO_MODIFY_ROOT_MESSAGE);
+		if (user.getAuthorities().stream().anyMatch(role -> role.getAuthority().equalsIgnoreCase(ROLE_ROOT))) {
+			throw new ForbiddenActionOnRootException(NOT_ELIGIBLE_TO_MODIFY_ROOT_MESSAGE);
 		}
 	}
 }

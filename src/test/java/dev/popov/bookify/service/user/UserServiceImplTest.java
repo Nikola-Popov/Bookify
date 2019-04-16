@@ -23,7 +23,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.multipart.MultipartFile;
 
 import dev.popov.bookify.commons.constants.RoleConstants;
-import dev.popov.bookify.commons.exceptions.MissingUserException;
+import dev.popov.bookify.commons.exceptions.UserNotFoundException;
 import dev.popov.bookify.domain.entity.Contact;
 import dev.popov.bookify.domain.entity.Role;
 import dev.popov.bookify.domain.entity.User;
@@ -163,7 +163,7 @@ public class UserServiceImplTest {
 		verify(modelMapperMock).map(userMock, UserServiceModel.class);
 	}
 
-	@Test(expected = MissingUserException.class)
+	@Test(expected = UserNotFoundException.class)
 	public void testEditThrowsExceptionBecauseOfMissingUserId() throws IOException {
 		userServiceImpl.edit(MISSING_ID, userEditServiceModelMock);
 	}
@@ -188,7 +188,7 @@ public class UserServiceImplTest {
 		verify(userRepositoryMock).saveAndFlush(userMock);
 	}
 
-	@Test(expected = MissingUserException.class)
+	@Test(expected = UserNotFoundException.class)
 	public void testDeleteThrowsExceptionBecauseOfMissingUserId() {
 		userServiceImpl.delete(MISSING_ID);
 	}

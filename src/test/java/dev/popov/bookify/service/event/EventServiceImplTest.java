@@ -15,12 +15,12 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.modelmapper.ModelMapper;
 
+import dev.popov.bookify.commons.exceptions.EventNotFoundException;
 import dev.popov.bookify.domain.entity.Event;
 import dev.popov.bookify.domain.entity.EventType;
 import dev.popov.bookify.domain.model.service.EventServiceModel;
 import dev.popov.bookify.domain.model.service.EventTypeServiceModel;
 import dev.popov.bookify.repository.EventRepository;
-import dev.popov.bookify.service.event.exception.EventNotFoundException;
 
 @RunWith(MockitoJUnitRunner.class)
 public class EventServiceImplTest {

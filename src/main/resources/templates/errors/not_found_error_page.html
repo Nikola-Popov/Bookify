@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<th:block th:include="~{fragments/head}"></th:block>
+</head>
+
+<body id="page-top">
+
+ <th:block th:include="~{fragments/navbar}"></th:block>
+ <div class="container-fluid">
+  <div class="text-center">
+   <div class="error mx-auto" th:text="404" data-text="404"></div>
+   <p class="lead text-gray-800 mb-5">Sorry, we couldn`t find the
+    web page you were looking for!</p>
+   <th:block sec:authorize="isAnonymous()">
+    <a th:href="@{/}">&larr; Back to Dashboard</a>
+   </th:block>
+   <th:block sec:authorize="isAuthenticated()">
+    <a th:href="@{/home}">&larr; Back to Dashboard</a>
+   </th:block>
+  </div>
+ </div>
+ <br />
+ 
+ <th:block th:include="~{fragments/footer}"></th:block>
+ <th:block th:include="~{fragments/logout_modal}"></th:block>
+ <th:block th:include="~{fragments/core_js_imports}"></th:block>
+</body>
+</html>

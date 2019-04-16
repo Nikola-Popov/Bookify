@@ -12,12 +12,14 @@ import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,6 +28,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import dev.popov.bookify.commons.exceptions.ForbiddenActionOnRootException;
 import dev.popov.bookify.domain.model.binding.UserEditBindingModel;
 import dev.popov.bookify.domain.model.binding.UserPasswordChangeBindingModel;
 import dev.popov.bookify.domain.model.binding.UserRegisterBindingModel;
@@ -39,7 +42,6 @@ import dev.popov.bookify.service.user.UserService;
 @Controller
 @RequestMapping("/users")
 public class UserController extends BaseController {
-
 	private static final String REGISTER_PATH = "/register";
 	private static final String USERS_PATH = "/users";
 	private static final String USER_REGISTER_BINDING_MODEL = "userRegisterBindingModel";
@@ -158,6 +160,15 @@ public class UserController extends BaseController {
 				modelMapper.map(userPasswordChangeBindingModel, UserEditServiceModel.class));
 
 		return redirect("/users/profile/settings/password");
+	}
+
+	@ExceptionHandler(ForbiddenActionOnRootException.class)
+	public ModelAndView handleForbiddenActionOnRootException(
+			ForbiddenActionOnRootException forbiddenActionOnRootException) {
+		final ModelAndView modelAndView = new ModelAndView();
+		modelAndView.addObject("errorMessage",
+				ExceptionUtils.getRootCause(forbiddenActionOnRootException).getMessage());
+		return view("/errors/forbidden_action_on_root_error_page", modelAndView);
 	}
 
 	private boolean passwordsMatch(String password, String confirmPassword) {

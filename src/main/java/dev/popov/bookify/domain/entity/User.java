@@ -1,5 +1,7 @@
 package dev.popov.bookify.domain.entity;
 
+import static dev.popov.bookify.commons.constants.UserSetupConstants.PASSWORD_LENGTH;
+import static dev.popov.bookify.commons.constants.UserSetupConstants.PASSWORD_TOO_SHORT_MESSAGE;
 import static java.util.Collections.emptySet;
 import static javax.persistence.CascadeType.ALL;
 
@@ -14,6 +16,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.validation.constraints.Size;
 
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -31,6 +34,7 @@ public class User extends BaseEntity implements UserDetails {
 	private String username;
 
 	@Column(name = "password", nullable = false)
+	@Size(min = PASSWORD_LENGTH, message = PASSWORD_TOO_SHORT_MESSAGE)
 	private String password;
 
 	@ManyToMany(targetEntity = Role.class, fetch = FetchType.EAGER)

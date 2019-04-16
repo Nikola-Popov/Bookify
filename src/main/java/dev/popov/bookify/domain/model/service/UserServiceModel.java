@@ -1,5 +1,8 @@
 package dev.popov.bookify.domain.model.service;
 
+import static dev.popov.bookify.commons.constants.UserSetupConstants.PASSWORD_LENGTH;
+import static dev.popov.bookify.commons.constants.UserSetupConstants.PASSWORD_TOO_SHORT_MESSAGE;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -19,9 +22,8 @@ public class UserServiceModel extends BaseServiceModel {
 	@NotNull
 	private String username;
 
-	@NotEmpty
 	@NotNull
-	@Size(min = 1, message = "Password must be atleast 8 characters long")
+	@Size(min = PASSWORD_LENGTH, message = PASSWORD_TOO_SHORT_MESSAGE)
 	private String password;
 
 	private Set<RoleServiceModel> authorities = new HashSet<>();

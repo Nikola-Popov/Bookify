@@ -1,6 +1,7 @@
 package dev.popov.bookify.web.controllers;
 
 import static dev.popov.bookify.web.controllers.constants.AuthorizationConstants.IS_ANONYMOUS;
+import static dev.popov.bookify.web.controllers.constants.AuthorizationConstants.IS_AUTHENTICATED;
 import static dev.popov.bookify.web.controllers.constants.PathConstants.HOME_PATH;
 import static dev.popov.bookify.web.controllers.constants.PathConstants.INDEX_PATH;
 import static dev.popov.bookify.web.controllers.constants.view.HomeViewConstants.HOME;
@@ -21,6 +22,7 @@ public class HomeController extends BaseController {
 	}
 
 	@GetMapping(HOME_PATH)
+	@PreAuthorize(IS_AUTHENTICATED)
 	public ModelAndView home() {
 		return view(HOME);
 	}

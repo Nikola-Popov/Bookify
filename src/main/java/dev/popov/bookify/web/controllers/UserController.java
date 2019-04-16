@@ -1,6 +1,8 @@
 package dev.popov.bookify.web.controllers;
 
+import static dev.popov.bookify.web.controllers.constants.AuthorizationConstants.HAS_ADMIN_ROLE;
 import static dev.popov.bookify.web.controllers.constants.AuthorizationConstants.IS_ANONYMOUS;
+import static dev.popov.bookify.web.controllers.constants.AuthorizationConstants.IS_AUTHENTICATED;
 import static dev.popov.bookify.web.controllers.constants.view.UserViewConstants.ALL_USERS;
 import static dev.popov.bookify.web.controllers.constants.view.UserViewConstants.LOGIN;
 import static dev.popov.bookify.web.controllers.constants.view.UserViewConstants.REGISTER;
@@ -37,6 +39,7 @@ import dev.popov.bookify.service.user.UserService;
 @Controller
 @RequestMapping("/users")
 public class UserController extends BaseController {
+
 	private static final String REGISTER_PATH = "/register";
 	private static final String USERS_PATH = "/users";
 	private static final String USER_REGISTER_BINDING_MODEL = "userRegisterBindingModel";
@@ -88,6 +91,7 @@ public class UserController extends BaseController {
 	}
 
 	@PutMapping("/edit/{id}")
+	@PreAuthorize(HAS_ADMIN_ROLE)
 	public ModelAndView edit(@PathVariable(name = "id") String id,
 			@ModelAttribute(name = "userEditBindingModel") UserEditBindingModel userEditBindingModel)
 			throws IOException {
@@ -97,6 +101,7 @@ public class UserController extends BaseController {
 	}
 
 	@DeleteMapping("/delete/{id}")
+	@PreAuthorize(HAS_ADMIN_ROLE)
 	public ModelAndView delete(@PathVariable(name = "id") String id) {
 		userService.delete(id);
 
@@ -104,6 +109,7 @@ public class UserController extends BaseController {
 	}
 
 	@GetMapping("/profile/settings")
+	@PreAuthorize(IS_AUTHENTICATED)
 	public ModelAndView settings(Principal principal, ModelAndView modelAndView) {
 		modelAndView.addObject("userSettingsViewModel",
 				modelMapper.map(userService.loadUserByUsername(principal.getName()), UserSettingsViewModel.class));
@@ -112,6 +118,7 @@ public class UserController extends BaseController {
 	}
 
 	@PutMapping("/profile/settings/{id}")
+	@PreAuthorize(IS_AUTHENTICATED)
 	public ModelAndView settingsConfirm(@PathVariable(name = "id") String id,
 			@ModelAttribute(name = "userEditBindingModel") UserSettingsEditBindingModel userSettingsEditBindingModel)
 			throws IOException {
@@ -121,6 +128,7 @@ public class UserController extends BaseController {
 	}
 
 	@GetMapping("/profile/settings/password")
+	@PreAuthorize(IS_AUTHENTICATED)
 	public ModelAndView changePassword(
 			@ModelAttribute(name = "userPasswordChangeBindingModel") UserPasswordChangeBindingModel userPasswordChangeBindingModel,
 			ModelAndView modelAndView) {
@@ -130,6 +138,7 @@ public class UserController extends BaseController {
 	}
 
 	@PutMapping("/profile/settings/password")
+	@PreAuthorize(IS_AUTHENTICATED)
 	public ModelAndView changePasswordConfirm(Principal principal,
 			UserPasswordChangeBindingModel userPasswordChangeBindingModel)
 			throws UsernameNotFoundException, IOException {

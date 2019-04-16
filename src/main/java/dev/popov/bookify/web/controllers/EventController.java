@@ -1,5 +1,7 @@
 package dev.popov.bookify.web.controllers;
 
+import static dev.popov.bookify.web.controllers.constants.AuthorizationConstants.HAS_ADMIN_ROLE;
+import static dev.popov.bookify.web.controllers.constants.AuthorizationConstants.IS_AUTHENTICATED;
 import static dev.popov.bookify.web.controllers.constants.event.EventBindingConstants.EVENT_CREATE_BINDING_MODEL;
 import static dev.popov.bookify.web.controllers.constants.event.EventPathConstants.BROWSE;
 import static dev.popov.bookify.web.controllers.constants.event.EventPathConstants.CREATE_PATH;
@@ -14,6 +16,7 @@ import java.util.List;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -46,6 +49,7 @@ public class EventController extends BaseController {
 	}
 
 	@GetMapping(CREATE_PATH)
+	@PreAuthorize(IS_AUTHENTICATED)
 	public ModelAndView create(
 			@ModelAttribute(name = EVENT_CREATE_BINDING_MODEL) EventCreateBindingModel eventCreateBindingModel,
 			ModelAndView modelAndView) {
@@ -55,6 +59,7 @@ public class EventController extends BaseController {
 	}
 
 	@PostMapping(CREATE_PATH)
+	@PreAuthorize(IS_AUTHENTICATED)
 	public ModelAndView createConfirm(
 			@ModelAttribute(name = EVENT_CREATE_BINDING_MODEL) EventCreateBindingModel eventCreateBindingModel) {
 		eventService.create(modelMapper.map(eventCreateBindingModel, EventServiceModel.class));
@@ -63,6 +68,7 @@ public class EventController extends BaseController {
 	}
 
 	@GetMapping
+	@PreAuthorize(IS_AUTHENTICATED)
 	public ModelAndView fetchAll(ModelAndView modelAndView) {
 		final List<EventViewModel> eventListViewModels = eventService.findAll().stream()
 				.map(event -> modelMapper.map(event, EventViewModel.class)).collect(toList());
@@ -80,11 +86,13 @@ public class EventController extends BaseController {
 	}
 
 	@GetMapping(BROWSE)
+	@PreAuthorize(IS_AUTHENTICATED)
 	public ModelAndView browse() {
 		return view(BROWSE_EVENTS);
 	}
 
 	@GetMapping(BROWSE + "/{id}")
+	@PreAuthorize(IS_AUTHENTICATED)
 	public ModelAndView browseById(@PathVariable(name = "id") String id, ModelAndView modelAndView) {
 		modelAndView.addObject("eventViewModel", modelMapper.map(eventService.findById(id), EventViewModel.class));
 
@@ -92,6 +100,7 @@ public class EventController extends BaseController {
 	}
 
 	@PutMapping("/edit/{id}")
+	@PreAuthorize(HAS_ADMIN_ROLE)
 	public ModelAndView edit(@PathVariable(name = "id") String id,
 			@ModelAttribute(name = "eventEditBindingModel") EventEditBindingModel eventEditBindingModel) {
 		eventService.edit(id, modelMapper.map(eventEditBindingModel, EventServiceModel.class));
@@ -100,6 +109,7 @@ public class EventController extends BaseController {
 	}
 
 	@DeleteMapping("/delete/{id}")
+	@PreAuthorize(HAS_ADMIN_ROLE)
 	public ModelAndView delete(@PathVariable(name = "id") String id) {
 		eventService.delete(id);
 

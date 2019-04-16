@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import dev.popov.bookify.commons.constants.RoleConstants;
 import dev.popov.bookify.commons.exceptions.MissingUserException;
@@ -95,7 +96,7 @@ public class UserServiceImpl implements UserService {
 			user.setPassword(bCryptPasswordEncoder.encode(userEditServiceModel.getPassword()));
 		}
 
-		if (userEditServiceModel.getImage() != null) {
+		if (isImageSelected(userEditServiceModel.getImage())) {
 			user.setImage(cloudinaryService.uploadImage(userEditServiceModel.getImage()));
 		}
 
@@ -107,6 +108,10 @@ public class UserServiceImpl implements UserService {
 		forbidActionOnRoot(userRepository.findById(id)
 				.orElseThrow(() -> new MissingUserException(UNABLE_TO_FIND_USER_BY_ID_MESSAGE)));
 		userRepository.deleteById(id);
+	}
+
+	private boolean isImageSelected(MultipartFile image) {
+		return image != null && !image.isEmpty();
 	}
 
 	private void forbidActionOnRoot(final User user) {

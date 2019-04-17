@@ -8,6 +8,7 @@ import java.util.List;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,7 +17,8 @@ import dev.popov.bookify.domain.model.service.EventTypeServiceModel;
 import dev.popov.bookify.domain.model.view.EventViewModel;
 import dev.popov.bookify.service.event.EventService;
 
-@RestController("/events")
+@RestController
+@RequestMapping(path = "/events")
 public class EventRestController {
 	private final EventService eventService;
 	private final ModelMapper modelMapper;

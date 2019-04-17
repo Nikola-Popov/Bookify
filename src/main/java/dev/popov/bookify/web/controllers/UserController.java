@@ -4,8 +4,12 @@ import static dev.popov.bookify.web.controllers.constants.AuthorizationConstants
 import static dev.popov.bookify.web.controllers.constants.AuthorizationConstants.IS_ANONYMOUS;
 import static dev.popov.bookify.web.controllers.constants.AuthorizationConstants.IS_AUTHENTICATED;
 import static dev.popov.bookify.web.controllers.constants.view.UserViewConstants.ALL_USERS;
+import static dev.popov.bookify.web.controllers.constants.view.UserViewConstants.ERRORS_FORBIDDEN_ACTION_ON_ROOT_ERROR_PAGE;
 import static dev.popov.bookify.web.controllers.constants.view.UserViewConstants.LOGIN;
+import static dev.popov.bookify.web.controllers.constants.view.UserViewConstants.PROFILE_SETTINGS_PASSWORD;
 import static dev.popov.bookify.web.controllers.constants.view.UserViewConstants.REGISTER;
+import static dev.popov.bookify.web.controllers.constants.view.UserViewConstants.USER_SETTINGS;
+import static dev.popov.bookify.web.controllers.constants.view.UserViewConstants.USER_SETTINGS_CHANGE_PASSWORD;
 import static java.util.stream.Collectors.toList;
 
 import java.io.IOException;
@@ -121,7 +125,7 @@ public class UserController extends BaseController {
 		modelAndView.addObject("userSettingsViewModel",
 				modelMapper.map(userService.loadUserByUsername(principal.getName()), UserSettingsViewModel.class));
 
-		return view("user_settings", modelAndView);
+		return view(USER_SETTINGS, modelAndView);
 	}
 
 	@PutMapping("/profile/settings/{id}")
@@ -142,7 +146,7 @@ public class UserController extends BaseController {
 			ModelAndView modelAndView) {
 		modelAndView.addObject("userPasswordChangeBindingModel", userPasswordChangeBindingModel);
 
-		return view("user_settings_change_password", modelAndView);
+		return view(USER_SETTINGS_CHANGE_PASSWORD, modelAndView);
 	}
 
 	@PutMapping("/profile/settings/password")
@@ -152,12 +156,12 @@ public class UserController extends BaseController {
 			throws UsernameNotFoundException, IOException {
 		if (!passwordsMatch(userPasswordChangeBindingModel.getNewPassword(),
 				userPasswordChangeBindingModel.getConfirmNewPassword())) {
-			return view("/profile/settings/password/");
+			return view(PROFILE_SETTINGS_PASSWORD);
 		}
 
 		if (passwordsMatch(userPasswordChangeBindingModel.getPassword(),
 				userPasswordChangeBindingModel.getNewPassword())) {
-			return view("/profile/settings/password/");
+			return view(PROFILE_SETTINGS_PASSWORD);
 		}
 
 		userPasswordChangeBindingModel.setPassword(userPasswordChangeBindingModel.getNewPassword());
@@ -174,7 +178,7 @@ public class UserController extends BaseController {
 		final ModelAndView modelAndView = new ModelAndView();
 		modelAndView.addObject("errorMessage",
 				ExceptionUtils.getRootCause(forbiddenActionOnRootException).getMessage());
-		return view("/errors/forbidden_action_on_root_error_page", modelAndView);
+		return view(ERRORS_FORBIDDEN_ACTION_ON_ROOT_ERROR_PAGE, modelAndView);
 	}
 
 	private boolean passwordsMatch(String password, String confirmPassword) {

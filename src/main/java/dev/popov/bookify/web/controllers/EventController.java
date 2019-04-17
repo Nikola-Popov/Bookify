@@ -6,7 +6,6 @@ import static dev.popov.bookify.web.controllers.constants.event.EventBindingCons
 import static dev.popov.bookify.web.controllers.constants.event.EventPathConstants.BROWSE;
 import static dev.popov.bookify.web.controllers.constants.event.EventPathConstants.CREATE_PATH;
 import static dev.popov.bookify.web.controllers.constants.event.EventPathConstants.EVENTS;
-import static dev.popov.bookify.web.controllers.constants.event.EventPathConstants.FILTER;
 import static dev.popov.bookify.web.controllers.constants.event.EventViewConstants.ALL_EVENTS;
 import static dev.popov.bookify.web.controllers.constants.event.EventViewConstants.BROWSE_EVENTS;
 import static dev.popov.bookify.web.controllers.constants.event.EventViewConstants.CREATE_EVENT;
@@ -25,16 +24,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import dev.popov.bookify.domain.model.binding.EventCreateBindingModel;
 import dev.popov.bookify.domain.model.binding.EventEditBindingModel;
 import dev.popov.bookify.domain.model.service.EventServiceModel;
-import dev.popov.bookify.domain.model.service.EventTypeServiceModel;
 import dev.popov.bookify.domain.model.view.EventViewModel;
 import dev.popov.bookify.service.event.EventService;
+import dev.popov.bookify.web.annotations.PageTitle;
 
 @Controller
 @RequestMapping("/events")
@@ -50,6 +47,7 @@ public class EventController extends BaseController {
 
 	@GetMapping(CREATE_PATH)
 	@PreAuthorize(IS_AUTHENTICATED)
+	@PageTitle("Create event")
 	public ModelAndView create(
 			@ModelAttribute(name = EVENT_CREATE_BINDING_MODEL) EventCreateBindingModel eventCreateBindingModel,
 			ModelAndView modelAndView) {
@@ -69,6 +67,7 @@ public class EventController extends BaseController {
 
 	@GetMapping
 	@PreAuthorize(IS_AUTHENTICATED)
+	@PageTitle("All events")
 	public ModelAndView fetchAll(ModelAndView modelAndView) {
 		final List<EventViewModel> eventListViewModels = eventService.findAll().stream()
 				.map(event -> modelMapper.map(event, EventViewModel.class)).collect(toList());
@@ -78,21 +77,16 @@ public class EventController extends BaseController {
 		return view(ALL_EVENTS, modelAndView);
 	}
 
-	@GetMapping(FILTER)
-	@ResponseBody
-	public List<EventViewModel> fetchApplyingFilter(@RequestParam(name = "type") String type) {
-		return eventService.findAllByEventType(EventTypeServiceModel.valueOf(type)).stream()
-				.map(event -> modelMapper.map(event, EventViewModel.class)).collect(toList());
-	}
-
 	@GetMapping(BROWSE)
 	@PreAuthorize(IS_AUTHENTICATED)
+	@PageTitle("Browse events")
 	public ModelAndView browse() {
 		return view(BROWSE_EVENTS);
 	}
 
 	@GetMapping(BROWSE + "/{id}")
 	@PreAuthorize(IS_AUTHENTICATED)
+	@PageTitle("Event")
 	public ModelAndView browseById(@PathVariable(name = "id") String id, ModelAndView modelAndView) {
 		modelAndView.addObject("eventViewModel", modelMapper.map(eventService.findById(id), EventViewModel.class));
 

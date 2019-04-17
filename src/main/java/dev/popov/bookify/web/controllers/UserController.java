@@ -38,6 +38,7 @@ import dev.popov.bookify.domain.model.service.UserServiceModel;
 import dev.popov.bookify.domain.model.view.UserListViewModel;
 import dev.popov.bookify.domain.model.view.UserSettingsViewModel;
 import dev.popov.bookify.service.user.UserService;
+import dev.popov.bookify.web.annotations.PageTitle;
 
 @Controller
 @RequestMapping("/users")
@@ -56,6 +57,7 @@ public class UserController extends BaseController {
 	}
 
 	@GetMapping
+	@PageTitle("All users")
 	public ModelAndView fetchAll(ModelAndView modelAndView) {
 		final List<UserListViewModel> userListViewModels = userService.findAll().stream()
 				.map(user -> modelMapper.map(user, UserListViewModel.class)).collect(toList());
@@ -66,6 +68,7 @@ public class UserController extends BaseController {
 
 	@GetMapping(REGISTER_PATH)
 	@PreAuthorize(IS_ANONYMOUS)
+	@PageTitle("Register")
 	public ModelAndView register(ModelAndView modelAndView,
 			@ModelAttribute(name = USER_REGISTER_BINDING_MODEL) UserRegisterBindingModel userRegisterBindingModel) {
 		modelAndView.addObject(USER_REGISTER_BINDING_MODEL, userRegisterBindingModel);
@@ -88,6 +91,7 @@ public class UserController extends BaseController {
 
 	@GetMapping("/login")
 	@PreAuthorize(IS_ANONYMOUS)
+	@PageTitle("Login")
 	public ModelAndView login() {
 		return view(LOGIN);
 	}
@@ -112,6 +116,7 @@ public class UserController extends BaseController {
 
 	@GetMapping("/profile/settings")
 	@PreAuthorize(IS_AUTHENTICATED)
+	@PageTitle("User settings")
 	public ModelAndView settings(Principal principal, ModelAndView modelAndView) {
 		modelAndView.addObject("userSettingsViewModel",
 				modelMapper.map(userService.loadUserByUsername(principal.getName()), UserSettingsViewModel.class));
@@ -131,6 +136,7 @@ public class UserController extends BaseController {
 
 	@GetMapping("/profile/settings/password")
 	@PreAuthorize(IS_AUTHENTICATED)
+	@PageTitle("Password change")
 	public ModelAndView changePassword(
 			@ModelAttribute(name = "userPasswordChangeBindingModel") UserPasswordChangeBindingModel userPasswordChangeBindingModel,
 			ModelAndView modelAndView) {

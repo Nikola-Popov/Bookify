@@ -12,13 +12,15 @@
   <div class="d-sm-flex align-items-center justify-content-between mb-3">
    <h1 class="h3 mb-0 text-gray-800">Event preview</h1>
   </div>
-  <form class="form" th:action="@{/purchases/buy}" th:method="post"
+  <form class="form" th:action="@{/cart/add}" th:method="post"
    th:object="${eventViewModel}">
-    <div class="form-group">
-     <label for="inputTitle">Title</label> <input type="text"
-      class="form-control" id="inputTitle" placeholder="Event title"
-      th:field="*{title}" disabled>
-   
+   <input type="hidden" name="id" th:value="*{id}">
+
+   <div class="form-group">
+    <label for="inputTitle">Title</label> <input type="text"
+     class="form-control" id="inputTitle" placeholder="Event title"
+     th:field="*{title}" disabled>
+
    </div>
    <div class="form-group">
     <label class="my-1 mr-2" for="type">Type</label> <select
@@ -54,18 +56,19 @@
     <textarea class="form-control" id="description" rows="5"
      th:field="*{description}" disabled></textarea>
    </div>
-   <br/>
-   <br/>
-    <div class="d-sm-flex align-items-center justify-content-between mb-3">
-   <h1 class="h3 mb-0 text-gray-800">Purchase details</h1>
-  </div>
-    <div class="form-group">
-     <label for="*{vouchersCount}">Available vouchers</label> <input
-      type="number" class="form-control text-center" id="*{vouchersCount}"
-      placeholder="Number of available vouchers" min="1" th:max="*{vouchersCount}"
-      th:field="*{vouchersCount}" required="required">
-    </div>
-   <button type="submit" class="btn btn-primary btn-lg btn-block">Purchase</button>
+   <br /> <br />
+   <div
+    class="d-sm-flex align-items-center justify-content-between mb-3">
+    <h1 class="h3 mb-0 text-gray-800">Purchase details</h1>
+   </div>
+   <div class="form-group">
+    <label for="*{vouchersCount}">Available vouchers</label> <input
+     type="number" class="form-control text-center"
+     id="*{vouchersCount}" placeholder="Number of available vouchers"
+     min="1" th:max="*{vouchersCount}" th:field="*{vouchersCount}"
+     required="required">
+   </div>
+   <button type="submit" class="btn btn-primary btn-lg btn-block">Add to cart</button>
   </form>
  </div>
  <th:block th:include="~{fragments/footer}"></th:block>

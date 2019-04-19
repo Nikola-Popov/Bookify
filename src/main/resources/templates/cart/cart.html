@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+ xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<th:block th:include="~{fragments/head}"></th:block>
+</head>
+
+<body id="page-top">
+ <th:block th:include="~{fragments/navbar}"></th:block>
+ <div class="container">
+  <div class="d-sm-flex align-items-center justify-content-between mb-3">
+   <h1 class="h3 mb-0 text-gray-800">Cart items</h1>
+  </div>
+
+  <div class="card">
+   <table class="table table-hover shopping-cart-wrap">
+    <thead class="text-muted">
+     <tr>
+      <th scope="col">Event</th>
+      <th scope="col" width="120">Vouchers</th>
+      <th scope="col" width="120">Price</th>
+      <th scope="col" width="200" class="text-right">Action</th>
+     </tr>
+    </thead>
+    <tbody>
+     <th:block th:each="event : ${cart.events}" th:object="${event}">
+      <tr>
+       <td>
+        <figure class="media">
+         <figcaption class="media-body">
+          <h4 class="title text-truncate" th:text="*{event.title}"></h4>
+          <dl class="param param-inline small">
+           <dt>Details</dt>
+           <dd th:text="| Type - *{event.eventType} |"></dd>
+           <dd th:text="| Address - *{event.address} |"></dd>
+          </dl>
+          <dl class="param param-inline small">
+           <dt>Description:</dt>
+           <dd th:text="*{event.description} |"></dd>
+          </dl>
+         </figcaption>
+        </figure>
+       </td>
+       <td><div>
+         <var class="price" th:text="*{quantity}"></var>
+        </div></td>
+       <td>
+        <div class="price-wrap">
+         <var class="price" th:text="*{event.price}"></var>
+         <small class="text-muted">(EUR each)</small>
+        </div>
+       </td>
+       <td class="text-right">
+        <form class="form" th:action="@{'/cart/delete/' + *{event.id}}"
+         th:method="delete">
+         <button class="btn btn-outline-danger" type="submit">Remove</button>
+        </form>
+      </tr>
+     </th:block>
+    </tbody>
+   </table>
+  </div>
+  <br />
+  <div class="text-right">
+   <div class="panel panel-default">
+    <h4>Payment details</h4>
+    <div class="panel-body">
+     <div class="pull-right"></div>
+    </div>
+    <div class="col-md-12">
+     <strong>Order Total</strong>
+     <div class="pull-right">
+      <h3>
+       <span class="badge badge-success"
+        th:text="| ${cart.totalPrice} EUR|"></span>
+      </h3>
+     </div>
+     <hr>
+    </div>
+    <button type="button" class="btn btn-success btn-lg btn-block">Checkout</button>
+   </div>
+  </div>
+  <br>
+  <hr>
+ </div>
+ <th:block th:include="~{fragments/footer}"></th:block>
+
+ <a class="scroll-to-top rounded" href="#page-top"> <i
+  class="fas fa-angle-up"></i>
+ </a>
+
+ <th:block th:include="~{fragments/logout_modal}"></th:block>
+ <th:block th:include="~{fragments/core_js_imports}"></th:block>
+</body>
+</html>

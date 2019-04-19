@@ -29,7 +29,7 @@ public class EventServiceModel extends BaseServiceModel {
 	@NotNull
 	private String description;
 	@Min(value = 0, message = "Invalid funds")
-	private BigDecimal price;
+	private BigDecimal price = BigDecimal.ZERO;
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate expiresOn;
 }

@@ -7,9 +7,9 @@ import static dev.popov.bookify.web.controllers.constants.event.EventPathConstan
 import static dev.popov.bookify.web.controllers.constants.event.EventPathConstants.CREATE_PATH;
 import static dev.popov.bookify.web.controllers.constants.event.EventPathConstants.EVENTS;
 import static dev.popov.bookify.web.controllers.constants.event.EventViewConstants.ALL_EVENTS;
-import static dev.popov.bookify.web.controllers.constants.event.EventViewConstants.BROWSE_EVENT;
 import static dev.popov.bookify.web.controllers.constants.event.EventViewConstants.BROWSE_EVENTS;
 import static dev.popov.bookify.web.controllers.constants.event.EventViewConstants.CREATE_EVENT;
+import static dev.popov.bookify.web.controllers.constants.event.EventViewConstants.PREVIEW_EVENT;
 import static java.util.stream.Collectors.toList;
 
 import java.util.List;
@@ -91,7 +91,7 @@ public class EventController extends BaseController {
 	public ModelAndView browseById(@PathVariable(name = "id") String id, ModelAndView modelAndView) {
 		modelAndView.addObject("eventViewModel", modelMapper.map(eventService.findById(id), EventViewModel.class));
 
-		return view(BROWSE_EVENT, modelAndView);
+		return view(PREVIEW_EVENT, modelAndView);
 	}
 
 	@PutMapping("/edit/{id}")

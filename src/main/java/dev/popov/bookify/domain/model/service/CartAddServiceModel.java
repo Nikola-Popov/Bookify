@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class PurchaseServiceModel {
-	private EventServiceModel eventServiceModel;
-	private UserServiceModel userServiceModel;
+public class CartAddServiceModel extends BaseServiceModel {
+	private String username;
+	private int quantity;
 }

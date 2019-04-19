@@ -42,7 +42,7 @@ public class Event extends BaseEntity {
 
 	@Column(name = "price")
 	@Min(value = 0, message = "Invalid funds")
-	private BigDecimal price;
+	private BigDecimal price = BigDecimal.ZERO;
 
 	@Column(name = "expires_on")
 	private LocalDate expiresOn;

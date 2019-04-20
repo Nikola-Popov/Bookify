@@ -1,4 +1,4 @@
-package dev.popov.bookify.service.user;
+package unit.dev.popov.bookify.service.user;
 
 import static dev.popov.bookify.commons.constants.RoleConstants.ROLE_ROOT;
 import static java.util.Arrays.asList;
@@ -17,12 +17,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.modelmapper.ModelMapper;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.multipart.MultipartFile;
 
 import dev.popov.bookify.commons.constants.RoleConstants;
+import dev.popov.bookify.commons.exceptions.ForbiddenActionOnRootException;
 import dev.popov.bookify.commons.exceptions.UserNotFoundException;
 import dev.popov.bookify.domain.entity.Contact;
 import dev.popov.bookify.domain.entity.Role;
@@ -34,9 +34,10 @@ import dev.popov.bookify.domain.model.service.UserServiceModel;
 import dev.popov.bookify.repository.UserRepository;
 import dev.popov.bookify.service.cloud.CloudinaryService;
 import dev.popov.bookify.service.role.RoleService;
+import dev.popov.bookify.service.user.UserServiceImpl;
 
 @RunWith(MockitoJUnitRunner.class)
-public class UserServiceImplTest {
+public class UserServiceTest {
 	private static final String IMAGE_URL = "imageUrl";
 	private static final String MISSING_ID = "missingId";
 	private static final String ID = "id";
@@ -168,7 +169,7 @@ public class UserServiceImplTest {
 		userServiceImpl.edit(MISSING_ID, userEditServiceModelMock);
 	}
 
-	@Test(expected = AccessDeniedException.class)
+	@Test(expected = ForbiddenActionOnRootException.class)
 	public void testEditThrowsExceptionWhenEditingRoot() throws IOException {
 		when(userMock.getAuthorities()).thenReturn(createRootAuthority());
 
@@ -193,7 +194,7 @@ public class UserServiceImplTest {
 		userServiceImpl.delete(MISSING_ID);
 	}
 
-	@Test(expected = AccessDeniedException.class)
+	@Test(expected = ForbiddenActionOnRootException.class)
 	public void testDeleteThrowsExceptionWhenDeletingRoot() {
 		when(userMock.getAuthorities()).thenReturn(createRootAuthority());
 

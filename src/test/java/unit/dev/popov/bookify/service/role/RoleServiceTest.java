@@ -1,4 +1,4 @@
-package dev.popov.bookify.service.role;
+package unit.dev.popov.bookify.service.role;
 
 import static dev.popov.bookify.commons.constants.RoleConstants.ROLE_ADMIN;
 import static dev.popov.bookify.commons.constants.RoleConstants.ROLE_ROOT;
@@ -20,9 +20,11 @@ import org.modelmapper.ModelMapper;
 import dev.popov.bookify.domain.entity.Role;
 import dev.popov.bookify.domain.model.service.RoleServiceModel;
 import dev.popov.bookify.repository.RoleRepository;
+import dev.popov.bookify.service.role.RoleFactory;
+import dev.popov.bookify.service.role.RoleServiceImpl;
 
 @RunWith(MockitoJUnitRunner.class)
-public class RoleServiceImplTest {
+public class RoleServiceTest {
 	@InjectMocks
 	private RoleServiceImpl roleServiceImpl;
 

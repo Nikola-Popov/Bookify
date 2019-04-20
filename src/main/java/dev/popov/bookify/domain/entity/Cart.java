@@ -1,6 +1,5 @@
 package dev.popov.bookify.domain.entity;
 
-import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.CascadeType.MERGE;
 
 import java.math.BigDecimal;
@@ -24,7 +23,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class Cart extends BaseEntity {
-	@OneToOne(cascade = ALL)
+	@OneToOne(cascade = MERGE)
 	@JoinColumn(name = "user_id", referencedColumnName = "id")
 	private User user;
 

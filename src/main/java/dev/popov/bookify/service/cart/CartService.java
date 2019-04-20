@@ -4,7 +4,7 @@ import dev.popov.bookify.domain.model.service.CartAddServiceModel;
 import dev.popov.bookify.domain.model.service.CartServiceModel;
 
 public interface CartService {
-	void add(CartAddServiceModel cartServiceModel);
+	void add(CartAddServiceModel cartAddServiceModel);
 
 	CartServiceModel retrieveCart(String username);
 

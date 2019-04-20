@@ -1,4 +1,4 @@
-package dev.popov.bookify.service.cloud;
+package unit.dev.popov.bookify.service.cloud;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
@@ -24,9 +24,10 @@ import com.cloudinary.Cloudinary;
 import com.cloudinary.Uploader;
 
 import dev.popov.bookify.commons.FileFactory;
+import dev.popov.bookify.service.cloud.CloudinaryServiceImpl;
 
 @RunWith(MockitoJUnitRunner.class)
-public class CloudinaryServiceImplTest {
+public class CloudinaryServiceTest {
 	private static final String ORIGINAL_FILENAME = "originalFilename";
 	private static final String URL = "url";
 	private static final String IMAGE_URL = "imageUrl";

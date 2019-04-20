@@ -1,7 +1,9 @@
-package dev.popov.bookify.service.event;
+package unit.dev.popov.bookify.service.event;
 
 import static dev.popov.bookify.domain.model.service.EventTypeServiceModel.ALL;
 import static java.util.Arrays.asList;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -21,9 +23,10 @@ import dev.popov.bookify.domain.entity.EventType;
 import dev.popov.bookify.domain.model.service.EventServiceModel;
 import dev.popov.bookify.domain.model.service.EventTypeServiceModel;
 import dev.popov.bookify.repository.EventRepository;
+import dev.popov.bookify.service.event.EventServiceImpl;
 
 @RunWith(MockitoJUnitRunner.class)
-public class EventServiceImplTest {
+public class EventServiceTest {
 	private static final String MISSING_ID = "missingId";
 	private static final String ID = "id";
 
@@ -104,5 +107,15 @@ public class EventServiceImplTest {
 		verify(eventRepositoryMock).findById(ID);
 		verify(eventServiceModelMock).setId(ID);
 		verify(eventRepositoryMock).saveAndFlush(eventMock);
+	}
+
+	@Test(expected = EventNotFoundException.class)
+	public void testFindByIdThrowsExceptionWhenSuchEventMisses() {
+		eventServiceImpl.findById(MISSING_ID);
+	}
+
+	@Test
+	public void testFindByIdReturnsCorrectEvent() {
+		assertThat(eventServiceImpl.findById(ID), equalTo(eventServiceModelMock));
 	}
 }

@@ -12,75 +12,65 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import dev.popov.bookify.domain.entity.Cart;
-import dev.popov.bookify.domain.entity.EventOrder;
-import dev.popov.bookify.domain.entity.User;
 import dev.popov.bookify.domain.model.service.CartAddServiceModel;
 import dev.popov.bookify.domain.model.service.CartServiceModel;
 import dev.popov.bookify.domain.model.service.EventOrderServiceModel;
-import dev.popov.bookify.domain.model.service.EventServiceModel;
 import dev.popov.bookify.repository.CartRepository;
 import dev.popov.bookify.service.event.EventOrderService;
 import dev.popov.bookify.service.event.EventService;
-import dev.popov.bookify.service.user.UserService;
 
 @Service
 public class CartServiceImpl implements CartService {
 	private final CartRepository cartRepository;
 	private final ModelMapper modelMapper;
 	private final EventService eventService;
-	private final UserService userService;
 	private final EventOrderService eventOrderService;
+	private final EventOrderServiceFactory eventOrderServiceFactory;
+	private final CartRetrievalService cartRetrievalService;
 
 	@Autowired
-	public CartServiceImpl(UserService userService, EventService eventService, CartRepository cartRepository,
-			ModelMapper modelMapper, EventOrderService eventOrderService) {
+	public CartServiceImpl(EventService eventService, CartRepository cartRepository, ModelMapper modelMapper,
+			EventOrderService eventOrderService, EventOrderServiceFactory eventOrderServiceFactory,
+			CartRetrievalService cartRetrievalService) {
 		this.cartRepository = cartRepository;
 		this.modelMapper = modelMapper;
 		this.eventService = eventService;
-		this.userService = userService;
 		this.eventOrderService = eventOrderService;
+		this.eventOrderServiceFactory = eventOrderServiceFactory;
+		this.cartRetrievalService = cartRetrievalService;
 	}
 
 	@Override
-	public void add(CartAddServiceModel cartServiceModel) {
-		final Cart cart = retrieveCartByUsername(cartServiceModel.getUsername());
+	public void add(CartAddServiceModel cartAddServiceModel) {
+		final CartServiceModel cartServiceModel = cartRetrievalService
+				.retrieveCartByUsername(cartAddServiceModel.getUsername());
 
-		final EventOrderServiceModel eventOrderServiceModel = new EventOrderServiceModel();
-		eventOrderServiceModel.setQuantity(cartServiceModel.getQuantity());
-		eventOrderServiceModel
-				.setEvent(modelMapper.map(eventService.findById(cartServiceModel.getId()), EventServiceModel.class));
+		final EventOrderServiceModel eventOrderServiceModel = eventOrderServiceFactory.createEventOrderServiceModel(
+				cartAddServiceModel.getQuantity(), eventService.findById(cartAddServiceModel.getId()));
 
-		cart.getEvents().add(modelMapper.map(eventOrderService.create(eventOrderServiceModel), EventOrder.class));
-		cart.setTotalPrice(calculateTotalPrice(cart.getEvents()));
+		cartServiceModel.getEvents().add(eventOrderService.create(eventOrderServiceModel));
+		cartServiceModel.setTotalPrice(calculateTotalPrice(cartServiceModel.getEvents()));
 
-		cartRepository.saveAndFlush(cart);
+		cartRepository.saveAndFlush(modelMapper.map(cartServiceModel, Cart.class));
 	}
 
 	@Override
 	public CartServiceModel retrieveCart(String username) {
-		return modelMapper.map(retrieveCartByUsername(username), CartServiceModel.class);
-	}
-
-	private Cart retrieveCartByUsername(String username) {
-		final Cart cart = cartRepository.findByUser_Username(username).orElseGet(Cart::new);
-		if (cart.getUser() == null) {
-			cart.setUser(modelMapper.map(userService.loadUserByUsername(username), User.class));
-		}
-		return cart;
-	}
-
-	private BigDecimal calculateTotalPrice(List<EventOrder> eventOrders) {
-		return eventOrders.stream().filter(Objects::nonNull)
-				.map(eventOrder -> eventOrder.getEvent().getPrice().multiply(valueOf(eventOrder.getQuantity())))
-				.reduce(ZERO, BigDecimal::add);
+		return cartRetrievalService.retrieveCartByUsername(username);
 	}
 
 	@Override
 	public void delete(String id, String username) {
-		final Cart cart = retrieveCartByUsername(username);
-		cart.getEvents().removeIf(eventOrder -> eventOrder.getEvent().getId().equals(id));
-		cart.setTotalPrice(calculateTotalPrice(cart.getEvents()));
+		final CartServiceModel cartServiceModel = cartRetrievalService.retrieveCartByUsername(username);
+		cartServiceModel.getEvents().removeIf(eventOrder -> eventOrder.getEvent().getId().equals(id));
+		cartServiceModel.setTotalPrice(calculateTotalPrice(cartServiceModel.getEvents()));
 
-		cartRepository.saveAndFlush(cart);
+		cartRepository.saveAndFlush(modelMapper.map(cartServiceModel, Cart.class));
+	}
+
+	private BigDecimal calculateTotalPrice(List<EventOrderServiceModel> eventOrders) {
+		return eventOrders.stream().filter(Objects::nonNull)
+				.map(eventOrder -> eventOrder.getEvent().getPrice().multiply(valueOf(eventOrder.getQuantity())))
+				.reduce(ZERO, BigDecimal::add);
 	}
 }

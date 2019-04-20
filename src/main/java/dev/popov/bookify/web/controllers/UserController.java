@@ -5,9 +5,7 @@ import static dev.popov.bookify.web.controllers.constants.AuthorizationConstants
 import static dev.popov.bookify.web.controllers.constants.AuthorizationConstants.IS_AUTHENTICATED;
 import static dev.popov.bookify.web.controllers.constants.view.UserViewConstants.ALL_USERS;
 import static dev.popov.bookify.web.controllers.constants.view.UserViewConstants.ERRORS_FORBIDDEN_ACTION_ON_ROOT_ERROR_PAGE;
-import static dev.popov.bookify.web.controllers.constants.view.UserViewConstants.LOGIN;
 import static dev.popov.bookify.web.controllers.constants.view.UserViewConstants.PROFILE_SETTINGS_PASSWORD;
-import static dev.popov.bookify.web.controllers.constants.view.UserViewConstants.REGISTER;
 import static dev.popov.bookify.web.controllers.constants.view.UserViewConstants.USER_SETTINGS;
 import static dev.popov.bookify.web.controllers.constants.view.UserViewConstants.USER_SETTINGS_CHANGE_PASSWORD;
 import static java.util.stream.Collectors.toList;
@@ -47,6 +45,8 @@ import dev.popov.bookify.web.annotations.PageTitle;
 @Controller
 @RequestMapping("/users")
 public class UserController extends BaseController {
+	public static final String LOGIN = "login";
+	public static final String REGISTER = "register";
 	private static final String REGISTER_PATH = "/register";
 	private static final String USERS_PATH = "/users";
 	private static final String USER_REGISTER_BINDING_MODEL = "userRegisterBindingModel";

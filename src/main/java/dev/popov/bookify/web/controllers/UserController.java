@@ -14,7 +14,6 @@ import static dev.popov.bookify.web.controllers.constants.user.UserPathConstants
 import static dev.popov.bookify.web.controllers.constants.user.UserViewConstants.ALL_USERS;
 import static dev.popov.bookify.web.controllers.constants.user.UserViewConstants.ERRORS_FORBIDDEN_ACTION_ON_ROOT_ERROR_PAGE;
 import static dev.popov.bookify.web.controllers.constants.user.UserViewConstants.LOGIN;
-import static dev.popov.bookify.web.controllers.constants.user.UserViewConstants.PROFILE_SETTINGS_PASSWORD;
 import static dev.popov.bookify.web.controllers.constants.user.UserViewConstants.REGISTER;
 import static dev.popov.bookify.web.controllers.constants.user.UserViewConstants.USER_SETTINGS;
 import static dev.popov.bookify.web.controllers.constants.user.UserViewConstants.USER_SETTINGS_CHANGE_PASSWORD;
@@ -24,12 +23,15 @@ import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -50,6 +52,8 @@ import dev.popov.bookify.domain.model.service.UserServiceModel;
 import dev.popov.bookify.domain.model.view.UserListViewModel;
 import dev.popov.bookify.domain.model.view.UserSettingsViewModel;
 import dev.popov.bookify.service.user.UserService;
+import dev.popov.bookify.validation.UserPasswordValidator;
+import dev.popov.bookify.validation.UserRegisterValidator;
 import dev.popov.bookify.web.annotations.PageTitle;
 
 @Controller
@@ -60,11 +64,16 @@ public class UserController extends BaseController {
 
 	private final ModelMapper modelMapper;
 	private final UserService userService;
+	private final UserPasswordValidator userPasswordValidator;
+	private final UserRegisterValidator userRegisterValidator;
 
 	@Autowired
-	public UserController(ModelMapper modelMapper, UserService userService) {
+	public UserController(ModelMapper modelMapper, UserService userService, UserPasswordValidator userPasswordValidator,
+			UserRegisterValidator userRegisterValidator) {
 		this.modelMapper = modelMapper;
 		this.userService = userService;
+		this.userPasswordValidator = userPasswordValidator;
+		this.userRegisterValidator = userRegisterValidator;
 	}
 
 	@GetMapping
@@ -91,8 +100,10 @@ public class UserController extends BaseController {
 	@PostMapping(REGISTER_PATH)
 	@PreAuthorize(IS_ANONYMOUS)
 	public ModelAndView registerConfirm(
-			@ModelAttribute(name = USER_REGISTER_BINDING_MODEL) UserRegisterBindingModel userRegisterBindingModel) {
-		if (!passwordsMatch(userRegisterBindingModel.getPassword(), userRegisterBindingModel.getConfirmPassword())) {
+			@Valid @ModelAttribute(name = USER_REGISTER_BINDING_MODEL) UserRegisterBindingModel userRegisterBindingModel,
+			BindingResult bindingResult) {
+		userRegisterValidator.validate(userRegisterBindingModel, bindingResult);
+		if (bindingResult.hasErrors()) {
 			return view(REGISTER);
 		}
 
@@ -139,8 +150,11 @@ public class UserController extends BaseController {
 	@PutMapping(PROFILE + SETTINGS + "/{id}")
 	@PreAuthorize(IS_AUTHENTICATED)
 	public ModelAndView settingsConfirm(@PathVariable(name = "id") String id,
-			@ModelAttribute(name = "userEditBindingModel") UserSettingsEditBindingModel userSettingsEditBindingModel)
-			throws IOException {
+			@Valid @ModelAttribute(name = "userEditBindingModel") UserSettingsEditBindingModel userSettingsEditBindingModel,
+			BindingResult bindingResult) throws IOException {
+		if (bindingResult.hasErrors()) {
+			return view(USER_SETTINGS);
+		}
 		userService.edit(id, modelMapper.map(userSettingsEditBindingModel, UserEditServiceModel.class));
 
 		return redirect(USERS + PROFILE + SETTINGS);
@@ -149,9 +163,10 @@ public class UserController extends BaseController {
 	@GetMapping(PROFILE + SETTINGS + PASSWORD)
 	@PreAuthorize(IS_AUTHENTICATED)
 	@PageTitle("Password change")
-	public ModelAndView changePassword(
+	public ModelAndView changePassword(Principal principal,
 			@ModelAttribute(name = USER_PASSWORD_CHANGE_BINDING_MODEL) UserPasswordChangeBindingModel userPasswordChangeBindingModel,
 			ModelAndView modelAndView) {
+		userPasswordChangeBindingModel.setUsername(principal.getName());
 		modelAndView.addObject(USER_PASSWORD_CHANGE_BINDING_MODEL, userPasswordChangeBindingModel);
 
 		return view(USER_SETTINGS_CHANGE_PASSWORD, modelAndView);
@@ -159,22 +174,19 @@ public class UserController extends BaseController {
 
 	@PutMapping(PROFILE + SETTINGS + PASSWORD)
 	@PreAuthorize(IS_AUTHENTICATED)
-	public ModelAndView changePasswordConfirm(Principal principal,
-			UserPasswordChangeBindingModel userPasswordChangeBindingModel)
-			throws UsernameNotFoundException, IOException {
-		if (!passwordsMatch(userPasswordChangeBindingModel.getNewPassword(),
-				userPasswordChangeBindingModel.getConfirmNewPassword())) {
-			return view(PROFILE_SETTINGS_PASSWORD);
-		}
+	public ModelAndView changePasswordConfirm(
+			@Valid @ModelAttribute(name = USER_PASSWORD_CHANGE_BINDING_MODEL) UserPasswordChangeBindingModel userPasswordChangeBindingModel,
+			BindingResult bindingResult) throws UsernameNotFoundException, IOException {
+		userPasswordValidator.validate(userPasswordChangeBindingModel, bindingResult);
 
-		if (passwordsMatch(userPasswordChangeBindingModel.getPassword(),
-				userPasswordChangeBindingModel.getNewPassword())) {
-			return view(PROFILE_SETTINGS_PASSWORD);
+		if (bindingResult.hasErrors()) {
+			return view(USER_SETTINGS_CHANGE_PASSWORD);
 		}
 
 		userPasswordChangeBindingModel.setPassword(userPasswordChangeBindingModel.getNewPassword());
 		userService.edit(
-				modelMapper.map(userService.loadUserByUsername(principal.getName()), UserServiceModel.class).getId(),
+				modelMapper.map(userService.loadUserByUsername(userPasswordChangeBindingModel.getUsername()),
+						UserServiceModel.class).getId(),
 				modelMapper.map(userPasswordChangeBindingModel, UserEditServiceModel.class));
 
 		return redirect(USERS + PROFILE + SETTINGS + PASSWORD);
@@ -187,9 +199,5 @@ public class UserController extends BaseController {
 		modelAndView.addObject("errorMessage",
 				ExceptionUtils.getRootCause(forbiddenActionOnRootException).getMessage());
 		return view(ERRORS_FORBIDDEN_ACTION_ON_ROOT_ERROR_PAGE, modelAndView);
-	}
-
-	private boolean passwordsMatch(String password, String confirmPassword) {
-		return password != null && password.equals(confirmPassword);
 	}
 }

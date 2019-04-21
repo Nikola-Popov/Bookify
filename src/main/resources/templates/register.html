@@ -23,23 +23,33 @@
         <input type="text" class="form-control form-control-user"
          id="inputUsername" placeholder="Username"
          th:field="*{username}">
+         <small id="usernameError"
+         th:if="${#fields.hasErrors('username')}"
+         th:errors="*{username}"></small>
        </div>
        <div class="col-sm-6 mb-3 mb-sm-0">
         <input type="email" class="form-control form-control-user"
          id="inputEmail" placeholder="Email Address"
-         th:field="*{contact.email}">
+         th:field="*{contact.email}"> <small id="emailError"
+         th:if="${#fields.hasErrors('contact.email')}"
+         th:errors="*{contact.email}"></small>
        </div>
       </div>
       <div class="form-group row">
        <div class="col-sm-6 mb-3 mb-sm-0">
         <input type="password" class="form-control form-control-user"
          id="inputPassword" placeholder="Password"
-         th:field="*{password}">
+         th:field="*{password}"> <small id="passwordError"
+         th:if="${#fields.hasErrors('password')}"
+         th:errors="*{password}"></small>
        </div>
        <div class="col-sm-6">
         <input type="password" class="form-control form-control-user"
          id="inputConfirmPassword" placeholder="Repeat Password"
-         th:field="*{confirmPassword}">
+         th:field="*{confirmPassword}"> <small
+         id="confirmPasswordError"
+         th:if="${#fields.hasErrors('confirmPassword')}"
+         th:errors="*{confirmPassword}"></small>
        </div>
       </div>
       <button type="submit" class="btn btn-primary btn-user btn-block">

@@ -31,7 +31,7 @@
       <div class="form-group">
        <label for="event-details-address" class="font-weight-bold">Address</label>
        <input class="form-control text-center" type="text"
-        name="telephone" id="event-details-price" th:value="*{address}"
+        name="address" id="event-details-price" th:value="*{address}"
         disabled />
       </div>
       <div class="form-group">
@@ -42,9 +42,28 @@
         th:value="*{vouchersCount}" disabled />
       </div>
       <div class="form-group">
-       <label for="event-details-description">Description</label>
-       <textarea class="form-control" id="event-details-description"
-        rows="5" disabled></textarea>
+       <label for="event-details-description" class="font-weight-bold">Description</label>
+       <input class="form-control text-center" type="text"
+        name="description" id="event-details-description"
+        th:value="*{description}" disabled />
+      </div>
+      <div class="form-group">
+       <label for="event-details-address" class="font-weight-bold">Address</label>
+       <input class="form-control text-center" type="text"
+        name="address" id="event-details-price" th:value="*{address}"
+        disabled />
+      </div>
+      <div class="form-group">
+       <label for="event-details-type" class="font-weight-bold">Event
+        Type</label> <input class="form-control text-center" type="text"
+        name="address" id="event-details-type" th:value="*{eventType}"
+        disabled />
+      </div>
+      <div class="form-group">
+       <label for="event-details-expires-on" class="font-weight-bold">Expiration
+        Date</label> <input class="form-control text-center" type="text"
+        name="expiresOn" id="event-details-expires-on"
+        th:value="*{expiresOn}" disabled />
       </div>
      </div>
      <div class="modal-footer d-flex justify-content-between">

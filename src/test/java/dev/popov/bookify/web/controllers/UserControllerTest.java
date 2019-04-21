@@ -10,7 +10,6 @@ import static dev.popov.bookify.web.controllers.constants.user.UserPathConstants
 import static dev.popov.bookify.web.controllers.constants.user.UserPathConstants.USERS;
 import static dev.popov.bookify.web.controllers.constants.user.UserViewConstants.ALL_USERS;
 import static dev.popov.bookify.web.controllers.constants.user.UserViewConstants.LOGIN;
-import static dev.popov.bookify.web.controllers.constants.user.UserViewConstants.PROFILE_SETTINGS_PASSWORD;
 import static dev.popov.bookify.web.controllers.constants.user.UserViewConstants.REGISTER;
 import static dev.popov.bookify.web.controllers.constants.user.UserViewConstants.USER_SETTINGS;
 import static dev.popov.bookify.web.controllers.constants.user.UserViewConstants.USER_SETTINGS_CHANGE_PASSWORD;
@@ -160,7 +159,8 @@ public class UserControllerTest {
 		registerUser(USERNAME, USER_EMAIL);
 
 		mockMvc.perform(put(PROFILE + SETTINGS + PASSWORD).param(PASSWORD, PASSWORD).param(NEW_PASSWORD, NEW_PASSWORD)
-				.param(CONFIRM_NEW_PASSWORD, CONFIRM_NEW_PASSWORD)).andExpect(view().name(PROFILE_SETTINGS_PASSWORD));
+				.param(CONFIRM_NEW_PASSWORD, CONFIRM_NEW_PASSWORD))
+				.andExpect(view().name(USER_SETTINGS_CHANGE_PASSWORD));
 	}
 
 	@Test
@@ -169,7 +169,8 @@ public class UserControllerTest {
 		registerUser(USERNAME, USER_EMAIL);
 
 		mockMvc.perform(put(PROFILE + SETTINGS + PASSWORD).param(PASSWORD, PASSWORD).param(NEW_PASSWORD, NEW_PASSWORD)
-				.param(CONFIRM_NEW_PASSWORD, CONFIRM_NEW_PASSWORD)).andExpect(view().name(PROFILE_SETTINGS_PASSWORD));
+				.param(CONFIRM_NEW_PASSWORD, CONFIRM_NEW_PASSWORD))
+				.andExpect(view().name(USER_SETTINGS_CHANGE_PASSWORD));
 	}
 
 	@Test

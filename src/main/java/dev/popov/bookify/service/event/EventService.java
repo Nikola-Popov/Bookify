@@ -10,7 +10,7 @@ public interface EventService {
 
 	EventServiceModel findById(String id);
 
-	void create(EventServiceModel eventServiceModel);
+	EventServiceModel create(EventServiceModel eventServiceModel);
 
 	List<EventServiceModel> findAllByEventType(EventTypeServiceModel eventTypeServiceModel);
 

@@ -1,11 +1,13 @@
 package dev.popov.bookify.web.controllers;
 
+import static dev.popov.bookify.web.controllers.constants.common.AuthorizationConstants.IS_AUTHENTICATED;
 import static dev.popov.bookify.web.controllers.constants.event.EventViewConstants.BROWSE_EVENTS;
 
 import java.security.Principal;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,6 +35,7 @@ public class CartController extends BaseController {
 	}
 
 	@GetMapping
+	@PreAuthorize(IS_AUTHENTICATED)
 	public ModelAndView showCart(Principal principal, ModelAndView modelAndView) {
 		final CartViewModel cart = modelMapper.map(cartService.retrieveCart(principal.getName()), CartViewModel.class);
 		modelAndView.addObject("cart", cart);
@@ -41,6 +44,7 @@ public class CartController extends BaseController {
 	}
 
 	@PostMapping("/add")
+	@PreAuthorize(IS_AUTHENTICATED)
 	public ModelAndView add(Principal principal,
 			@ModelAttribute(name = "eventCartAddBindingModel") EventCartAddBindingModel eventCartAddBindingModel) {
 		final CartAddServiceModel cartAddServiceModel = new CartAddServiceModel();
@@ -54,6 +58,7 @@ public class CartController extends BaseController {
 	}
 
 	@DeleteMapping("/delete/{id}")
+	@PreAuthorize(IS_AUTHENTICATED)
 	public ModelAndView test(@PathVariable(name = "id") String id, Principal principal) {
 		cartService.delete(id, principal.getName());
 

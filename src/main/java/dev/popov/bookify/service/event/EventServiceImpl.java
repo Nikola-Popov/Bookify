@@ -36,8 +36,9 @@ public class EventServiceImpl implements EventService {
 	}
 
 	@Override
-	public void create(EventServiceModel eventServiceModel) {
-		eventRepository.saveAndFlush(modelMapper.map(eventServiceModel, Event.class));
+	public EventServiceModel create(EventServiceModel eventServiceModel) {
+		return modelMapper.map(eventRepository.saveAndFlush(modelMapper.map(eventServiceModel, Event.class)),
+				EventServiceModel.class);
 	}
 
 	@Override

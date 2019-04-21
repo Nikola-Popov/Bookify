@@ -1,11 +1,11 @@
 package dev.popov.bookify.web.controllers;
 
-import static dev.popov.bookify.web.controllers.constants.AuthorizationConstants.IS_ANONYMOUS;
-import static dev.popov.bookify.web.controllers.constants.AuthorizationConstants.IS_AUTHENTICATED;
-import static dev.popov.bookify.web.controllers.constants.PathConstants.HOME_PATH;
-import static dev.popov.bookify.web.controllers.constants.PathConstants.INDEX_PATH;
-import static dev.popov.bookify.web.controllers.constants.view.HomeViewConstants.HOME;
-import static dev.popov.bookify.web.controllers.constants.view.HomeViewConstants.INDEX;
+import static dev.popov.bookify.web.controllers.constants.common.AuthorizationConstants.IS_ANONYMOUS;
+import static dev.popov.bookify.web.controllers.constants.common.AuthorizationConstants.IS_AUTHENTICATED;
+import static dev.popov.bookify.web.controllers.constants.common.CommonPathConstants.HOME_PATH;
+import static dev.popov.bookify.web.controllers.constants.common.CommonPathConstants.INDEX_PATH;
+import static dev.popov.bookify.web.controllers.constants.common.CommonViewConstants.HOME;
+import static dev.popov.bookify.web.controllers.constants.common.CommonViewConstants.INDEX;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;

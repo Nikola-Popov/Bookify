@@ -1,4 +1,4 @@
-package dev.popov.bookify.web.controllers.constants;
+package dev.popov.bookify.web.controllers.constants.common;
 
 import static dev.popov.bookify.commons.constants.RoleConstants.ROLE_ADMIN;
 

@@ -1,13 +1,23 @@
 package dev.popov.bookify.web.controllers;
 
-import static dev.popov.bookify.web.controllers.constants.AuthorizationConstants.HAS_ADMIN_ROLE;
-import static dev.popov.bookify.web.controllers.constants.AuthorizationConstants.IS_ANONYMOUS;
-import static dev.popov.bookify.web.controllers.constants.AuthorizationConstants.IS_AUTHENTICATED;
-import static dev.popov.bookify.web.controllers.constants.view.UserViewConstants.ALL_USERS;
-import static dev.popov.bookify.web.controllers.constants.view.UserViewConstants.ERRORS_FORBIDDEN_ACTION_ON_ROOT_ERROR_PAGE;
-import static dev.popov.bookify.web.controllers.constants.view.UserViewConstants.PROFILE_SETTINGS_PASSWORD;
-import static dev.popov.bookify.web.controllers.constants.view.UserViewConstants.USER_SETTINGS;
-import static dev.popov.bookify.web.controllers.constants.view.UserViewConstants.USER_SETTINGS_CHANGE_PASSWORD;
+import static dev.popov.bookify.web.controllers.constants.common.AuthorizationConstants.HAS_ADMIN_ROLE;
+import static dev.popov.bookify.web.controllers.constants.common.AuthorizationConstants.IS_ANONYMOUS;
+import static dev.popov.bookify.web.controllers.constants.common.AuthorizationConstants.IS_AUTHENTICATED;
+import static dev.popov.bookify.web.controllers.constants.user.UserPathConstants.DELETE;
+import static dev.popov.bookify.web.controllers.constants.user.UserPathConstants.EDIT;
+import static dev.popov.bookify.web.controllers.constants.user.UserPathConstants.LOGIN_PATH;
+import static dev.popov.bookify.web.controllers.constants.user.UserPathConstants.PASSWORD;
+import static dev.popov.bookify.web.controllers.constants.user.UserPathConstants.PROFILE;
+import static dev.popov.bookify.web.controllers.constants.user.UserPathConstants.REGISTER_PATH;
+import static dev.popov.bookify.web.controllers.constants.user.UserPathConstants.SETTINGS;
+import static dev.popov.bookify.web.controllers.constants.user.UserPathConstants.USERS;
+import static dev.popov.bookify.web.controllers.constants.user.UserViewConstants.ALL_USERS;
+import static dev.popov.bookify.web.controllers.constants.user.UserViewConstants.ERRORS_FORBIDDEN_ACTION_ON_ROOT_ERROR_PAGE;
+import static dev.popov.bookify.web.controllers.constants.user.UserViewConstants.LOGIN;
+import static dev.popov.bookify.web.controllers.constants.user.UserViewConstants.PROFILE_SETTINGS_PASSWORD;
+import static dev.popov.bookify.web.controllers.constants.user.UserViewConstants.REGISTER;
+import static dev.popov.bookify.web.controllers.constants.user.UserViewConstants.USER_SETTINGS;
+import static dev.popov.bookify.web.controllers.constants.user.UserViewConstants.USER_SETTINGS_CHANGE_PASSWORD;
 import static java.util.stream.Collectors.toList;
 
 import java.io.IOException;
@@ -45,10 +55,7 @@ import dev.popov.bookify.web.annotations.PageTitle;
 @Controller
 @RequestMapping("/users")
 public class UserController extends BaseController {
-	public static final String LOGIN = "login";
-	public static final String REGISTER = "register";
-	private static final String REGISTER_PATH = "/register";
-	private static final String USERS_PATH = "/users";
+	private static final String USER_PASSWORD_CHANGE_BINDING_MODEL = "userPasswordChangeBindingModel";
 	private static final String USER_REGISTER_BINDING_MODEL = "userRegisterBindingModel";
 
 	private final ModelMapper modelMapper;
@@ -61,6 +68,7 @@ public class UserController extends BaseController {
 	}
 
 	@GetMapping
+	@PreAuthorize(HAS_ADMIN_ROLE)
 	@PageTitle("All users")
 	public ModelAndView fetchAll(ModelAndView modelAndView) {
 		final List<UserListViewModel> userListViewModels = userService.findAll().stream()
@@ -90,35 +98,35 @@ public class UserController extends BaseController {
 
 		userService.register(modelMapper.map(userRegisterBindingModel, UserServiceModel.class));
 
-		return redirect("/users/login");
+		return redirect(USERS + LOGIN_PATH);
 	}
 
-	@GetMapping("/login")
+	@GetMapping(LOGIN_PATH)
 	@PreAuthorize(IS_ANONYMOUS)
 	@PageTitle("Login")
 	public ModelAndView login() {
 		return view(LOGIN);
 	}
 
-	@PutMapping("/edit/{id}")
+	@PutMapping(EDIT + "/{id}")
 	@PreAuthorize(HAS_ADMIN_ROLE)
 	public ModelAndView edit(@PathVariable(name = "id") String id,
 			@ModelAttribute(name = "userEditBindingModel") UserEditBindingModel userEditBindingModel)
 			throws IOException {
 		userService.edit(id, modelMapper.map(userEditBindingModel, UserEditServiceModel.class));
 
-		return redirect(USERS_PATH);
+		return redirect(USERS);
 	}
 
-	@DeleteMapping("/delete/{id}")
+	@DeleteMapping(DELETE + "/{id}")
 	@PreAuthorize(HAS_ADMIN_ROLE)
 	public ModelAndView delete(@PathVariable(name = "id") String id) {
 		userService.delete(id);
 
-		return redirect(USERS_PATH);
+		return redirect(USERS);
 	}
 
-	@GetMapping("/profile/settings")
+	@GetMapping(PROFILE + SETTINGS)
 	@PreAuthorize(IS_AUTHENTICATED)
 	@PageTitle("User settings")
 	public ModelAndView settings(Principal principal, ModelAndView modelAndView) {
@@ -128,28 +136,28 @@ public class UserController extends BaseController {
 		return view(USER_SETTINGS, modelAndView);
 	}
 
-	@PutMapping("/profile/settings/{id}")
+	@PutMapping(PROFILE + SETTINGS + "/{id}")
 	@PreAuthorize(IS_AUTHENTICATED)
 	public ModelAndView settingsConfirm(@PathVariable(name = "id") String id,
 			@ModelAttribute(name = "userEditBindingModel") UserSettingsEditBindingModel userSettingsEditBindingModel)
 			throws IOException {
 		userService.edit(id, modelMapper.map(userSettingsEditBindingModel, UserEditServiceModel.class));
 
-		return redirect("/users/profile/settings");
+		return redirect(USERS + PROFILE + SETTINGS);
 	}
 
-	@GetMapping("/profile/settings/password")
+	@GetMapping(PROFILE + SETTINGS + PASSWORD)
 	@PreAuthorize(IS_AUTHENTICATED)
 	@PageTitle("Password change")
 	public ModelAndView changePassword(
-			@ModelAttribute(name = "userPasswordChangeBindingModel") UserPasswordChangeBindingModel userPasswordChangeBindingModel,
+			@ModelAttribute(name = USER_PASSWORD_CHANGE_BINDING_MODEL) UserPasswordChangeBindingModel userPasswordChangeBindingModel,
 			ModelAndView modelAndView) {
-		modelAndView.addObject("userPasswordChangeBindingModel", userPasswordChangeBindingModel);
+		modelAndView.addObject(USER_PASSWORD_CHANGE_BINDING_MODEL, userPasswordChangeBindingModel);
 
 		return view(USER_SETTINGS_CHANGE_PASSWORD, modelAndView);
 	}
 
-	@PutMapping("/profile/settings/password")
+	@PutMapping(PROFILE + SETTINGS + PASSWORD)
 	@PreAuthorize(IS_AUTHENTICATED)
 	public ModelAndView changePasswordConfirm(Principal principal,
 			UserPasswordChangeBindingModel userPasswordChangeBindingModel)
@@ -169,7 +177,7 @@ public class UserController extends BaseController {
 				modelMapper.map(userService.loadUserByUsername(principal.getName()), UserServiceModel.class).getId(),
 				modelMapper.map(userPasswordChangeBindingModel, UserEditServiceModel.class));
 
-		return redirect("/users/profile/settings/password");
+		return redirect(USERS + PROFILE + SETTINGS + PASSWORD);
 	}
 
 	@ExceptionHandler(ForbiddenActionOnRootException.class)

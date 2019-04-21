@@ -1,10 +1,12 @@
 package dev.popov.bookify.web.controllers;
 
-import static dev.popov.bookify.web.controllers.constants.AuthorizationConstants.HAS_ADMIN_ROLE;
-import static dev.popov.bookify.web.controllers.constants.AuthorizationConstants.IS_AUTHENTICATED;
+import static dev.popov.bookify.web.controllers.constants.common.AuthorizationConstants.HAS_ADMIN_ROLE;
+import static dev.popov.bookify.web.controllers.constants.common.AuthorizationConstants.IS_AUTHENTICATED;
 import static dev.popov.bookify.web.controllers.constants.event.EventBindingConstants.EVENT_CREATE_BINDING_MODEL;
 import static dev.popov.bookify.web.controllers.constants.event.EventPathConstants.BROWSE;
-import static dev.popov.bookify.web.controllers.constants.event.EventPathConstants.CREATE_PATH;
+import static dev.popov.bookify.web.controllers.constants.event.EventPathConstants.CREATE;
+import static dev.popov.bookify.web.controllers.constants.event.EventPathConstants.DELETE;
+import static dev.popov.bookify.web.controllers.constants.event.EventPathConstants.EDIT;
 import static dev.popov.bookify.web.controllers.constants.event.EventPathConstants.EVENTS;
 import static dev.popov.bookify.web.controllers.constants.event.EventViewConstants.ALL_EVENTS;
 import static dev.popov.bookify.web.controllers.constants.event.EventViewConstants.BROWSE_EVENTS;
@@ -46,7 +48,7 @@ public class EventController extends BaseController {
 		this.modelMapper = modelMapper;
 	}
 
-	@GetMapping(CREATE_PATH)
+	@GetMapping(CREATE)
 	@PreAuthorize(IS_AUTHENTICATED)
 	@PageTitle("Create event")
 	public ModelAndView create(
@@ -57,7 +59,7 @@ public class EventController extends BaseController {
 		return view(CREATE_EVENT, modelAndView);
 	}
 
-	@PostMapping(CREATE_PATH)
+	@PostMapping(CREATE)
 	@PreAuthorize(IS_AUTHENTICATED)
 	public ModelAndView createConfirm(
 			@ModelAttribute(name = EVENT_CREATE_BINDING_MODEL) EventCreateBindingModel eventCreateBindingModel) {
@@ -72,7 +74,6 @@ public class EventController extends BaseController {
 	public ModelAndView fetchAll(ModelAndView modelAndView) {
 		final List<EventViewModel> eventListViewModels = eventService.findAll().stream()
 				.map(event -> modelMapper.map(event, EventViewModel.class)).collect(toList());
-
 		modelAndView.addObject("eventListViewModels", eventListViewModels);
 
 		return view(ALL_EVENTS, modelAndView);
@@ -94,7 +95,7 @@ public class EventController extends BaseController {
 		return view(PREVIEW_EVENT, modelAndView);
 	}
 
-	@PutMapping("/edit/{id}")
+	@PutMapping(EDIT + "/{id}")
 	@PreAuthorize(HAS_ADMIN_ROLE)
 	public ModelAndView edit(@PathVariable(name = "id") String id,
 			@ModelAttribute(name = "eventEditBindingModel") EventEditBindingModel eventEditBindingModel) {
@@ -103,7 +104,7 @@ public class EventController extends BaseController {
 		return redirect(EVENTS);
 	}
 
-	@DeleteMapping("/delete/{id}")
+	@DeleteMapping(DELETE + "/{id}")
 	@PreAuthorize(HAS_ADMIN_ROLE)
 	public ModelAndView delete(@PathVariable(name = "id") String id) {
 		eventService.delete(id);

@@ -49,8 +49,10 @@ import dev.popov.bookify.domain.model.binding.UserRegisterBindingModel;
 import dev.popov.bookify.domain.model.binding.UserSettingsEditBindingModel;
 import dev.popov.bookify.domain.model.service.UserEditServiceModel;
 import dev.popov.bookify.domain.model.service.UserServiceModel;
+import dev.popov.bookify.domain.model.view.PurchaseViewModel;
 import dev.popov.bookify.domain.model.view.UserListViewModel;
 import dev.popov.bookify.domain.model.view.UserSettingsViewModel;
+import dev.popov.bookify.service.purchase.PurchaseService;
 import dev.popov.bookify.service.user.UserService;
 import dev.popov.bookify.validation.UserPasswordValidator;
 import dev.popov.bookify.validation.UserRegisterValidator;
@@ -66,14 +68,16 @@ public class UserController extends BaseController {
 	private final UserService userService;
 	private final UserPasswordValidator userPasswordValidator;
 	private final UserRegisterValidator userRegisterValidator;
+	private final PurchaseService purchaseService;
 
 	@Autowired
 	public UserController(ModelMapper modelMapper, UserService userService, UserPasswordValidator userPasswordValidator,
-			UserRegisterValidator userRegisterValidator) {
+			UserRegisterValidator userRegisterValidator, PurchaseService purchaseService) {
 		this.modelMapper = modelMapper;
 		this.userService = userService;
 		this.userPasswordValidator = userPasswordValidator;
 		this.userRegisterValidator = userRegisterValidator;
+		this.purchaseService = purchaseService;
 	}
 
 	@GetMapping
@@ -190,6 +194,15 @@ public class UserController extends BaseController {
 				modelMapper.map(userPasswordChangeBindingModel, UserEditServiceModel.class));
 
 		return redirect(USERS + PROFILE + SETTINGS + PASSWORD);
+	}
+
+	@GetMapping(PROFILE + "/purchases")
+	public ModelAndView purchases(Principal principal, ModelAndView modelAndView) {
+		final List<PurchaseViewModel> purchases = purchaseService.findAllByUsername(principal.getName()).stream()
+				.map(purchase -> modelMapper.map(purchase, PurchaseViewModel.class)).collect(toList());
+		modelAndView.addObject("purchases", purchases);
+
+		return view("user/user_purchases", modelAndView);
 	}
 
 	@ExceptionHandler(ForbiddenActionOnRootException.class)

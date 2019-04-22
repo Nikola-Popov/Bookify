@@ -14,7 +14,7 @@
   <div class="card shadow mb-4">
    <div class="card-header py-3">
     <h6 class="m-0 font-weight-bold text-primary">List of all
-     events</h6>
+     purchases</h6>
    </div>
    <div class="card-body">
     <div class="table-responsive">
@@ -22,27 +22,33 @@
       cellspacing="0">
       <thead>
        <tr>
+        <th>Purchased by</th>
         <th>Title</th>
+        <th>Address</th>
         <th>Type</th>
         <th>Price</th>
+        <th>Expires On</th>
+        <th>Quantity</th>
+        <th>Description</th>
         <th>Actions</th>
        </tr>
       </thead>
       <tbody>
-       <th:block th:each="event : ${eventListViewModels}"
-        th:object="${event}">
+       <th:block th:each="purchase : ${purchases}"
+        th:object="${purchase}">
         <tr>
-         <td th:text="*{title}"></td>
-         <td th:text="*{eventType}"></td>
-         <td th:text="*{price}"></td>
+         <td th:text="*{user.username}"></td>
+         <td th:text="*{event.event.title}"></td>
+         <td th:text="*{event.event.address}"></td>
+         <td th:text="*{event.event.eventType}"></td>
+         <td th:text="*{event.event.price}"></td>
+         <td th:text="*{event.event.expiresOn}"></td>
+         <td th:text="*{event.quantity}"></td>
+         <td th:text="*{event.event.description}"></td>
          <td class="text-center">
-          <button class="btn btn-dark" data-toggle="modal"
-           th:data-target="|#event_details_modal_*{id}|">Show</button> <th:block
-           th:replace="fragments/modals/event/event_details_modal"></th:block>
-          <th:block th:replace="fragments/modals/event/event_edit_modal"></th:block>
-          <hr />
-          <form th:id="|event_delete_form_*{id}|" class="form"
-           th:action="@{'/events/delete/' + *{id}}" th:method="delete">
+          <form th:id="|purchase_delete_form_*{id}|" class="form"
+           th:action="@{'/purchases/delete/' + *{id}}"
+           th:method="delete">
            <button class="btn btn-danger" type="submit">Delete</button>
           </form>
          </td>

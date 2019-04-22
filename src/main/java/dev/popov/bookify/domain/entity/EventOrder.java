@@ -1,7 +1,5 @@
 package dev.popov.bookify.domain.entity;
 
-import static javax.persistence.CascadeType.MERGE;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -23,7 +21,7 @@ public class EventOrder extends BaseEntity {
 	@Min(value = 1, message = "Minimum is 1 item quantity")
 	private int quantity;
 
-	@ManyToOne(targetEntity = Event.class, cascade = MERGE)
+	@ManyToOne(targetEntity = Event.class)
 	@JoinColumn(name = "event_id", referencedColumnName = "id")
 	private Event event;
 }

@@ -9,4 +9,8 @@ public interface CartService {
 	CartServiceModel retrieveCart(String username);
 
 	void delete(String id, String username);
+
+	CartServiceModel findById(String id);
+
+	void checkout(CartServiceModel cartServiceModel);
 }

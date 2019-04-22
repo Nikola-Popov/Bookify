@@ -23,7 +23,6 @@ public class EventServiceModel extends BaseServiceModel {
 	private String title;
 	private String address;
 	private EventType eventType;
-	@Min(value = 1, message = "You must specify atleast 1 available voucher")
 	private int vouchersCount;
 	@NotEmpty
 	@NotNull

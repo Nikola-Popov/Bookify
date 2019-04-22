@@ -64,4 +64,11 @@ public class CartController extends BaseController {
 
 		return redirect("/cart");
 	}
+
+	@PostMapping("/checkout/{id}")
+	public ModelAndView checkout(@PathVariable(name = "id") String id) {
+		cartService.checkout(cartService.findById(id));
+
+		return redirect("/users/profile/purchases");
+	}
 }

@@ -68,7 +68,13 @@
      min="1" th:max="*{vouchersCount}" th:field="*{vouchersCount}"
      required="required">
    </div>
-   <button type="submit" class="btn btn-primary btn-lg btn-block">Add to cart</button>
+   <div th:if="*{vouchersCount == 0}">
+   <button type="submit" class="btn btn-primary btn-lg btn-block" disabled >Add to cart</button>
+   </div>
+  
+   <div th:if="*{vouchersCount > 0}">
+   <button type="submit" class="btn btn-primary btn-lg btn-block" >Add to cart</button>
+   </div>
   </form>
  </div>
  <th:block th:include="~{fragments/footer}"></th:block>

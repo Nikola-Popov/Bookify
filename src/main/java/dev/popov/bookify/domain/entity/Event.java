@@ -33,7 +33,6 @@ public class Event extends BaseEntity {
 	private EventType eventType;
 
 	@Column(name = "vouchers_count")
-	@Min(value = 1, message = "You must specify atleast 1 available voucher")
 	private int vouchersCount = 1;
 
 	@Column(name = "description")

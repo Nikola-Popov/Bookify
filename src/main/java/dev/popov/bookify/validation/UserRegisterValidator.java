@@ -13,6 +13,7 @@ import dev.popov.bookify.validation.util.PasswordUtil;
 
 @Validator
 public class UserRegisterValidator implements org.springframework.validation.Validator {
+	private static final String EMAIL = "email";
 	private static final String EMAIL_MUST_NOT_BE_BLANK = "Email must not be blank";
 	private static final String USERNAME = "username";
 	private static final String USERNAME_IS_ALREADY_TAKEN = "Username is already taken";
@@ -47,9 +48,9 @@ public class UserRegisterValidator implements org.springframework.validation.Val
 			errors.rejectValue(CONFIRM_PASSWORD, PASSWORDS_DO_NOT_MATCH, PASSWORDS_DO_NOT_MATCH);
 		}
 
-		if (userRegisterBindingModel.getContact() != null
-				&& isBlank(userRegisterBindingModel.getContact().getEmail())) {
-			errors.rejectValue("email", EMAIL_MUST_NOT_BE_BLANK, EMAIL_MUST_NOT_BE_BLANK);
+		if (userRegisterBindingModel.getContact() == null
+				|| isBlank(userRegisterBindingModel.getContact().getEmail())) {
+			errors.rejectValue(EMAIL, EMAIL_MUST_NOT_BE_BLANK, EMAIL_MUST_NOT_BE_BLANK);
 		}
 	}
 }

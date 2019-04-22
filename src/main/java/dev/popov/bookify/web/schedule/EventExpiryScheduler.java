@@ -1,6 +1,6 @@
 package dev.popov.bookify.web.schedule;
 
-import java.time.LocalDate;
+import static java.time.LocalDate.now;
 
 import javax.transaction.Transactional;
 
@@ -20,6 +20,6 @@ public class EventExpiryScheduler {
 	@Transactional
 	@Scheduled(cron = EVERY_DAY)
 	public void removeExpiredEvents() {
-		eventRepository.deleteAllByExpiresOnIsBefore(LocalDate.now());
+		eventRepository.deleteAllByExpiresOnIsBefore(now());
 	}
 }

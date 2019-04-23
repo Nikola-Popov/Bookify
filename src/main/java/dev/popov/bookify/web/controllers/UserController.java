@@ -56,6 +56,7 @@ import dev.popov.bookify.service.purchase.PurchaseService;
 import dev.popov.bookify.service.user.UserService;
 import dev.popov.bookify.validation.UserPasswordValidator;
 import dev.popov.bookify.validation.UserRegisterValidator;
+import dev.popov.bookify.web.annotations.LogAction;
 import dev.popov.bookify.web.annotations.PageTitle;
 
 @Controller
@@ -125,6 +126,7 @@ public class UserController extends BaseController {
 
 	@PutMapping(EDIT + "/{id}")
 	@PreAuthorize(HAS_ADMIN_ROLE)
+	@LogAction("Edit user")
 	public ModelAndView edit(@PathVariable(name = "id") String id,
 			@ModelAttribute(name = "userEditBindingModel") UserEditBindingModel userEditBindingModel)
 			throws IOException {
@@ -135,6 +137,7 @@ public class UserController extends BaseController {
 
 	@DeleteMapping(DELETE + "/{id}")
 	@PreAuthorize(HAS_ADMIN_ROLE)
+	@LogAction("Delete user")
 	public ModelAndView delete(@PathVariable(name = "id") String id) {
 		userService.delete(id);
 
@@ -153,6 +156,7 @@ public class UserController extends BaseController {
 
 	@PutMapping(PROFILE + SETTINGS + "/{id}")
 	@PreAuthorize(IS_AUTHENTICATED)
+	@LogAction("Change user settings")
 	public ModelAndView settingsConfirm(@PathVariable(name = "id") String id,
 			@Valid @ModelAttribute(name = "userEditBindingModel") UserSettingsEditBindingModel userSettingsEditBindingModel,
 			BindingResult bindingResult) throws IOException {
@@ -178,6 +182,7 @@ public class UserController extends BaseController {
 
 	@PutMapping(PROFILE + SETTINGS + PASSWORD)
 	@PreAuthorize(IS_AUTHENTICATED)
+	@LogAction("Password change")
 	public ModelAndView changePasswordConfirm(
 			@Valid @ModelAttribute(name = USER_PASSWORD_CHANGE_BINDING_MODEL) UserPasswordChangeBindingModel userPasswordChangeBindingModel,
 			BindingResult bindingResult) throws UsernameNotFoundException, IOException {

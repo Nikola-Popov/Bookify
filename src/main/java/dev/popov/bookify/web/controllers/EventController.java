@@ -34,6 +34,7 @@ import dev.popov.bookify.domain.model.binding.EventEditBindingModel;
 import dev.popov.bookify.domain.model.service.EventServiceModel;
 import dev.popov.bookify.domain.model.view.EventViewModel;
 import dev.popov.bookify.service.event.EventService;
+import dev.popov.bookify.web.annotations.LogAction;
 import dev.popov.bookify.web.annotations.PageTitle;
 
 @Controller
@@ -61,6 +62,7 @@ public class EventController extends BaseController {
 
 	@PostMapping(CREATE)
 	@PreAuthorize(IS_AUTHENTICATED)
+	@LogAction("Create event")
 	public ModelAndView createConfirm(
 			@ModelAttribute(name = EVENT_CREATE_BINDING_MODEL) EventCreateBindingModel eventCreateBindingModel) {
 		eventService.create(modelMapper.map(eventCreateBindingModel, EventServiceModel.class));
@@ -97,6 +99,7 @@ public class EventController extends BaseController {
 
 	@PutMapping(EDIT + "/{id}")
 	@PreAuthorize(HAS_ADMIN_ROLE)
+	@LogAction("Edit event")
 	public ModelAndView edit(@PathVariable(name = "id") String id,
 			@ModelAttribute(name = "eventEditBindingModel") EventEditBindingModel eventEditBindingModel) {
 		eventService.edit(id, modelMapper.map(eventEditBindingModel, EventServiceModel.class));
@@ -106,6 +109,7 @@ public class EventController extends BaseController {
 
 	@DeleteMapping(DELETE + "/{id}")
 	@PreAuthorize(HAS_ADMIN_ROLE)
+	@LogAction("Delete event")
 	public ModelAndView delete(@PathVariable(name = "id") String id) {
 		eventService.delete(id);
 

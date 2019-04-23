@@ -20,6 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import dev.popov.bookify.domain.model.view.PurchaseListViewModel;
 import dev.popov.bookify.service.purchase.PurchaseService;
+import dev.popov.bookify.web.annotations.LogAction;
 
 @Controller
 @RequestMapping("/purchases")
@@ -47,6 +48,7 @@ public class PurchaseController extends BaseController {
 
 	@DeleteMapping(DELETE + "/{id}")
 	@PreAuthorize(HAS_ADMIN_ROLE)
+	@LogAction("Delete purchase")
 	public ModelAndView delete(@PathVariable(name = "id") String id) {
 		purchaseService.deleteById(id);
 

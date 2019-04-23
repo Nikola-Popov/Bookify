@@ -21,6 +21,7 @@ import dev.popov.bookify.domain.model.binding.EventCartAddBindingModel;
 import dev.popov.bookify.domain.model.service.CartAddServiceModel;
 import dev.popov.bookify.domain.model.view.CartViewModel;
 import dev.popov.bookify.service.cart.CartService;
+import dev.popov.bookify.web.annotations.LogAction;
 
 @Controller
 @RequestMapping("/cart")
@@ -45,6 +46,7 @@ public class CartController extends BaseController {
 
 	@PostMapping("/add")
 	@PreAuthorize(IS_AUTHENTICATED)
+	@LogAction("Add to cart")
 	public ModelAndView add(Principal principal,
 			@ModelAttribute(name = "eventCartAddBindingModel") EventCartAddBindingModel eventCartAddBindingModel) {
 		final CartAddServiceModel cartAddServiceModel = new CartAddServiceModel();
@@ -59,6 +61,7 @@ public class CartController extends BaseController {
 
 	@DeleteMapping("/delete/{id}")
 	@PreAuthorize(IS_AUTHENTICATED)
+	@LogAction("Remove from cart")
 	public ModelAndView test(@PathVariable(name = "id") String id, Principal principal) {
 		cartService.delete(id, principal.getName());
 
@@ -66,6 +69,7 @@ public class CartController extends BaseController {
 	}
 
 	@PostMapping("/checkout/{id}")
+	@LogAction("Cart checkout")
 	public ModelAndView checkout(@PathVariable(name = "id") String id) {
 		cartService.checkout(cartService.findById(id));
 

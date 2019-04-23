@@ -1,5 +1,6 @@
 package dev.popov.bookify.web.interceptors;
 
+import static dev.popov.bookify.web.controllers.constants.common.AuthorizationConstants.IS_AUTHENTICATED;
 import static java.util.Arrays.asList;
 import static java.util.Locale.ENGLISH;
 
@@ -9,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.ModelAndView;
@@ -32,9 +34,18 @@ public class AuditLoggerInterceptor extends HandlerInterceptorAdapter {
 	@Override
 	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
 			ModelAndView modelAndView) {
-		if (MODIFICATION_HTTP_METHODS.contains(request.getMethod().toLowerCase(ENGLISH))) {
+		if (MODIFICATION_HTTP_METHODS.contains(request.getMethod().toLowerCase(ENGLISH))
+				&& isUserAuthenticated(handler)) {
 			auditLog(request, handler);
 		}
+	}
+
+	private boolean isUserAuthenticated(Object handler) {
+		if (handler instanceof HandlerMethod) {
+			final PreAuthorize preAuthorize = ((HandlerMethod) handler).getMethodAnnotation(PreAuthorize.class);
+			return preAuthorize.value().equals(IS_AUTHENTICATED);
+		}
+		return false;
 	}
 
 	private void auditLog(HttpServletRequest request, Object handler) {

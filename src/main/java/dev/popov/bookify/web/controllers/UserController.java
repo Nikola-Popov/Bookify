@@ -197,6 +197,7 @@ public class UserController extends BaseController {
 	}
 
 	@GetMapping(PROFILE + "/purchases")
+	@PreAuthorize(IS_AUTHENTICATED)
 	public ModelAndView purchases(Principal principal, ModelAndView modelAndView) {
 		final List<PurchaseViewModel> purchases = purchaseService.findAllByUsername(principal.getName()).stream()
 				.map(purchase -> modelMapper.map(purchase, PurchaseViewModel.class)).collect(toList());

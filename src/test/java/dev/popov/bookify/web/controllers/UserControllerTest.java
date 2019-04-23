@@ -15,7 +15,6 @@ import static dev.popov.bookify.web.controllers.constants.user.UserViewConstants
 import static dev.popov.bookify.web.controllers.constants.user.UserViewConstants.USER_SETTINGS_CHANGE_PASSWORD;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -110,17 +109,15 @@ public class UserControllerTest {
 	}
 
 	@Test
-	@Ignore
 	public void testLogin() throws Exception {
-		mockMvc.perform(get(LOGIN_PATH)).andExpect(view().name(LOGIN));
+		mockMvc.perform(get(USERS + LOGIN_PATH)).andExpect(view().name(LOGIN));
 	}
 
 	@Test
-	@WithMockUser
-	@Ignore
+	@WithMockUser(roles = ADMIN)
 	public void testEdit() throws Exception {
-		mockMvc.perform(put(USERS + EDIT + "/" + registerUser(USERNAME, USER_EMAIL).getId()).param(USERNAME, USERNAME))
-				.andExpect(redirectedUrl(USERS));
+		mockMvc.perform(put(USERS + EDIT + "/" + registerUser(USERNAME, USER_EMAIL).getId()).param(USERNAME, USERNAME)
+				.param("contact.email", USER_EMAIL)).andExpect(redirectedUrl(USERS));
 	}
 
 	@Test
@@ -147,7 +144,7 @@ public class UserControllerTest {
 	}
 
 	@Test
-	@WithMockUser
+	@WithMockUser(username = USERNAME)
 	@Ignore
 	public void testChangePassword() throws Exception {
 		registerUser(USERNAME, USER_EMAIL);
@@ -160,30 +157,11 @@ public class UserControllerTest {
 	@Test
 	@WithMockUser(username = USERNAME)
 	@Ignore
-	public void testChangePasswordConfirmNewAndConfirmPasswordsDontMatch() throws Exception {
-		registerUser(USERNAME, USER_EMAIL);
-
-		mockMvc.perform(put(PROFILE + SETTINGS + PASSWORD).param(PASSWORD, PASSWORD).param(NEW_PASSWORD, NEW_PASSWORD)
-				.param(CONFIRM_NEW_PASSWORD, CONFIRM_NEW_PASSWORD))
-				.andExpect(view().name(USER_SETTINGS_CHANGE_PASSWORD));
-	}
-
-	@Test
-	@WithMockUser(username = USERNAME)
-	@Ignore
-	public void testChangePasswordConfirmCurrentAndNewPasswordsMatch() throws Exception {
-		registerUser(USERNAME, USER_EMAIL);
-
-		mockMvc.perform(put(PROFILE + SETTINGS + PASSWORD).param(PASSWORD, PASSWORD).param(NEW_PASSWORD, NEW_PASSWORD)
-				.param(CONFIRM_NEW_PASSWORD, CONFIRM_NEW_PASSWORD))
-				.andExpect(view().name(USER_SETTINGS_CHANGE_PASSWORD));
-	}
-
-	@Test
-	@WithMockUser(username = USERNAME)
-	@Ignore
 	public void testChangePasswordConfirm() throws Exception {
-		fail("not yet implemented");
+		registerUser(USERNAME, USER_EMAIL);
+
+		mockMvc.perform(put(PROFILE + SETTINGS + PASSWORD).param(PASSWORD, PASSWORD).param(NEW_PASSWORD, NEW_PASSWORD)
+				.param(CONFIRM_NEW_PASSWORD, CONFIRM_NEW_PASSWORD)).andExpect(redirectedUrl("hello"));
 	}
 
 	private UserServiceModel registerUser(String username, String email) {

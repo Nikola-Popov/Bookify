@@ -3,6 +3,7 @@ package dev.popov.bookify.web.interceptors;
 import static dev.popov.bookify.web.controllers.constants.common.AuthorizationConstants.IS_AUTHENTICATED;
 import static java.util.Arrays.asList;
 import static java.util.Locale.ENGLISH;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 import java.util.List;
 
@@ -16,6 +17,7 @@ import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
+import dev.popov.bookify.AuditLogFactory;
 import dev.popov.bookify.domain.entity.AuditLog;
 import dev.popov.bookify.repository.AuditLogRepository;
 import dev.popov.bookify.web.annotations.LogAction;
@@ -25,10 +27,12 @@ public class AuditLoggerInterceptor extends HandlerInterceptorAdapter {
 	private static final List<String> MODIFICATION_HTTP_METHODS = asList("put", "post", "delete");
 
 	private final AuditLogRepository auditLogRepository;
+	private final AuditLogFactory auditLogFactory;
 
 	@Autowired
-	public AuditLoggerInterceptor(AuditLogRepository auditLogRepository) {
+	public AuditLoggerInterceptor(AuditLogRepository auditLogRepository, AuditLogFactory auditLogFactory) {
 		this.auditLogRepository = auditLogRepository;
+		this.auditLogFactory = auditLogFactory;
 	}
 
 	@Override
@@ -36,7 +40,10 @@ public class AuditLoggerInterceptor extends HandlerInterceptorAdapter {
 			ModelAndView modelAndView) {
 		if (MODIFICATION_HTTP_METHODS.contains(request.getMethod().toLowerCase(ENGLISH))
 				&& isUserAuthenticated(handler)) {
-			auditLog(request, handler);
+			final AuditLog auditLog = auditLogFactory.createAuditLog(request.getUserPrincipal().getName(),
+					extractAction(handler));
+
+			auditLogRepository.saveAndFlush(auditLog);
 		}
 	}
 
@@ -48,18 +55,11 @@ public class AuditLoggerInterceptor extends HandlerInterceptorAdapter {
 		return false;
 	}
 
-	private void auditLog(HttpServletRequest request, Object handler) {
-		final AuditLog auditLog = new AuditLog();
-		setAction(handler, auditLog);
-		auditLog.setUsername(request.getUserPrincipal().getName());
-
-		auditLogRepository.saveAndFlush(auditLog);
-	}
-
-	private void setAction(Object handler, final AuditLog auditLog) {
+	private String extractAction(Object handler) {
 		if (handler instanceof HandlerMethod) {
 			final LogAction logAction = ((HandlerMethod) handler).getMethodAnnotation(LogAction.class);
-			auditLog.setAction(logAction.value());
+			return logAction.value();
 		}
+		return EMPTY;
 	}
 }

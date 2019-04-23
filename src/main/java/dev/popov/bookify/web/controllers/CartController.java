@@ -69,6 +69,7 @@ public class CartController extends BaseController {
 	}
 
 	@PostMapping("/checkout/{id}")
+	@PreAuthorize(IS_AUTHENTICATED)
 	@LogAction("Cart checkout")
 	public ModelAndView checkout(@PathVariable(name = "id") String id) {
 		cartService.checkout(cartService.findById(id));

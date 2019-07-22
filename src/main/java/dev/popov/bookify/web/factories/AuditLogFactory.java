@@ -1,4 +1,4 @@
-package dev.popov.bookify;
+package dev.popov.bookify.web.factories;
 
 import org.springframework.stereotype.Component;
 

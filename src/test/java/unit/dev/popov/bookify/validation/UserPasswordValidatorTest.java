@@ -16,7 +16,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.Errors;
 
 import dev.popov.bookify.domain.entity.User;
@@ -43,7 +43,7 @@ public class UserPasswordValidatorTest {
 	private UserRepository userRepositoryMock;
 
 	@Mock
-	private BCryptPasswordEncoder bCryptPasswordEncoderMock;
+	private PasswordEncoder passwordEncoderMock;
 
 	@Mock
 	private PasswordUtil passwordUtilMock;
@@ -69,7 +69,7 @@ public class UserPasswordValidatorTest {
 		when(userPasswordChangeBindingModelMock.getNewPassword()).thenReturn(NEW_PASSWORD);
 		when(userPasswordChangeBindingModelMock.getConfirmNewPassword()).thenReturn(CONFIRM_NEW_PASSWORD);
 
-		when(bCryptPasswordEncoderMock.matches(PASSWORD, ENCODED_PASSWORD)).thenReturn(true);
+		when(passwordEncoderMock.matches(PASSWORD, ENCODED_PASSWORD)).thenReturn(true);
 		when(passwordUtilMock.passwordsMatch(NEW_PASSWORD, CONFIRM_NEW_PASSWORD)).thenReturn(true);
 	}
 
@@ -87,7 +87,7 @@ public class UserPasswordValidatorTest {
 
 	@Test
 	public void testValidateRejectsWhenCurrentAndPersistedPasswordDontMatch() {
-		when(bCryptPasswordEncoderMock.matches(PASSWORD, ENCODED_PASSWORD)).thenReturn(false);
+		when(passwordEncoderMock.matches(PASSWORD, ENCODED_PASSWORD)).thenReturn(false);
 
 		userPasswordValidator.validate(userPasswordChangeBindingModelMock, errorsMock);
 

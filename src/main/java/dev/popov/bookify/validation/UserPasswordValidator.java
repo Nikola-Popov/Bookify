@@ -4,7 +4,7 @@ import static java.lang.String.format;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.Errors;
 
 import dev.popov.bookify.domain.entity.User;
@@ -25,14 +25,14 @@ public class UserPasswordValidator implements org.springframework.validation.Val
 	private static final String NEW_PASSWORD_AND_CONFIRM_PASSWORD_DONT_MATCH = "New password and confirm password don`t match";
 
 	private final UserRepository userRepository;
-	private final BCryptPasswordEncoder bCryptPasswordEncoder;
+	private final PasswordEncoder passwordEncoder;
 	private final PasswordUtil passwordUtil;
 
 	@Autowired
-	public UserPasswordValidator(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder,
+	public UserPasswordValidator(UserRepository userRepository, PasswordEncoder passwordEncoder,
 			PasswordUtil passwordUtil) {
 		this.userRepository = userRepository;
-		this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+		this.passwordEncoder = passwordEncoder;
 		this.passwordUtil = passwordUtil;
 	}
 
@@ -48,7 +48,7 @@ public class UserPasswordValidator implements org.springframework.validation.Val
 		final User user = this.userRepository.findByUsername(userPasswordChangeBindingModel.getUsername())
 				.orElseThrow(() -> new UsernameNotFoundException(
 						format(USERNAME_NOT_FOUND, userPasswordChangeBindingModel.getUsername())));
-		if (!bCryptPasswordEncoder.matches(userPasswordChangeBindingModel.getPassword(), user.getPassword())) {
+		if (!passwordEncoder.matches(userPasswordChangeBindingModel.getPassword(), user.getPassword())) {
 			errors.rejectValue(PASSWORD, INVALID_CURRENT_PASSWORD, INVALID_CURRENT_PASSWORD);
 		}
 

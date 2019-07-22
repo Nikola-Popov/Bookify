@@ -22,10 +22,10 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import dev.popov.bookify.AuditLogFactory;
 import dev.popov.bookify.domain.entity.AuditLog;
 import dev.popov.bookify.repository.AuditLogRepository;
 import dev.popov.bookify.web.annotations.LogAction;
+import dev.popov.bookify.web.factories.AuditLogFactory;
 import dev.popov.bookify.web.interceptors.AuditLoggerInterceptor;
 
 @RunWith(MockitoJUnitRunner.class)

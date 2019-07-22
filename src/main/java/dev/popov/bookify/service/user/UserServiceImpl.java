@@ -11,7 +11,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -36,16 +36,16 @@ public class UserServiceImpl implements UserService {
 	private final UserRepository userRepository;
 	private final RoleService roleService;
 	private final ModelMapper modelMapper;
-	private final BCryptPasswordEncoder bCryptPasswordEncoder;
+	private final PasswordEncoder passwordEncoder;
 	private final CloudinaryService cloudinaryService;
 
 	@Autowired
 	public UserServiceImpl(UserRepository userRepository, RoleService roleService, ModelMapper modelMapper,
-			BCryptPasswordEncoder bCryptPasswordEncoder, CloudinaryService cloudinaryService) {
+			PasswordEncoder passwordEncoder, CloudinaryService cloudinaryService) {
 		this.userRepository = userRepository;
 		this.roleService = roleService;
 		this.modelMapper = modelMapper;
-		this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+		this.passwordEncoder = passwordEncoder;
 		this.cloudinaryService = cloudinaryService;
 	}
 
@@ -66,7 +66,7 @@ public class UserServiceImpl implements UserService {
 		}
 
 		final User user = modelMapper.map(userServiceModel, User.class);
-		user.setPassword(bCryptPasswordEncoder.encode(userServiceModel.getPassword()));
+		user.setPassword(passwordEncoder.encode(userServiceModel.getPassword()));
 
 		return modelMapper.map(userRepository.saveAndFlush(user), UserServiceModel.class);
 	}
@@ -94,7 +94,7 @@ public class UserServiceImpl implements UserService {
 		}
 
 		if (isNotBlank(userEditServiceModel.getPassword())) {
-			user.setPassword(bCryptPasswordEncoder.encode(userEditServiceModel.getPassword()));
+			user.setPassword(passwordEncoder.encode(userEditServiceModel.getPassword()));
 		}
 
 		if (isImageSelected(userEditServiceModel.getImage())) {

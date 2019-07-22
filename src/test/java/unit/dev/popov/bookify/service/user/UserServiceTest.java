@@ -18,7 +18,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.multipart.MultipartFile;
 
 import dev.popov.bookify.commons.constants.RoleConstants;
@@ -59,7 +59,7 @@ public class UserServiceTest {
 	private ModelMapper modelMapperMock;
 
 	@Mock
-	private BCryptPasswordEncoder bCryptPasswordEncoderMock;
+	private PasswordEncoder passwordEncoderMock;
 
 	@Mock
 	private User userMock;
@@ -99,7 +99,7 @@ public class UserServiceTest {
 		when(userEditServiceModelMock.getImage()).thenReturn(multipartFileMock);
 		when(userEditServiceModelMock.getPassword()).thenReturn(PASSWORD);
 
-		when(bCryptPasswordEncoderMock.encode(PASSWORD)).thenReturn(ENCODED_PASSWORD);
+		when(passwordEncoderMock.encode(PASSWORD)).thenReturn(ENCODED_PASSWORD);
 
 		when(roleServiceMock.findByAuthority(RoleConstants.ROLE_USER)).thenReturn(roleServiceModelMock);
 

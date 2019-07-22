@@ -17,10 +17,10 @@ import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
-import dev.popov.bookify.AuditLogFactory;
 import dev.popov.bookify.domain.entity.AuditLog;
 import dev.popov.bookify.repository.AuditLogRepository;
 import dev.popov.bookify.web.annotations.LogAction;
+import dev.popov.bookify.web.factories.AuditLogFactory;
 
 @Component
 public class AuditLoggerInterceptor extends HandlerInterceptorAdapter {

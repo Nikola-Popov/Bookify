@@ -1,5 +1,7 @@
-# BOOKIFY
+<h1 align="center" style="border-bottom: none;">BOOKIFY⛳</h1>
+<p align="center">
 A website which allows the users to search or create events to attend. The project follows the SOLID principles and it's designed in accordance to the MVC pattern with respect to security, user experiance, usability and testing.
+</p>
 
 The tech stack is solely [Java Spring](https://spring.io) for the backend while the frontend is mostly [Bootstrap](https://getbootstrap.com) and the rendering is powered by [Thymeleaf](https://www.thymeleaf.org). The website also relias on external dependencies for file storage and api documentaion (more details below).
 

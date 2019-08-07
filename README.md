@@ -1,9 +1,9 @@
-<h1 align="center" style="border-bottom: none;">BOOKIFY⛳</h1>
+<h1 align="center" style="border-bottom: none;">BOOKIFY🎟️</h1>
 <p align="center">
 A website which allows the users to search or create events to attend. The project follows the SOLID principles and it's designed in accordance to the MVC pattern with respect to security, user experiance, usability and testing.
 </p>
 
-The tech stack is solely [Java Spring](https://spring.io) for the backend while the frontend is mostly [Bootstrap](https://getbootstrap.com) and the rendering is powered by [Thymeleaf](https://www.thymeleaf.org). The website also relias on external dependencies for file storage and api documentaion (more details below).
+The tech stack is solely [Java Spring](https://spring.io) for the backend while the frontend is mostly [Bootstrap](https://getbootstrap.com) and the rendering is powered by [Thymeleaf](https://www.thymeleaf.org). The website also relias on external dependencies for file storage and api documentaion (more details are described in the features section below).
 
 ## Table of Contents 
 
@@ -21,6 +21,16 @@ The tech stack is solely [Java Spring](https://spring.io) for the backend while 
 ---
 
 ## Features
+![](https://media.giphy.com/media/W2uXr7q0AvTaJgSa5J/giphy.gif) 
+
+### Events browsing and publishing
+Allows for the users to browse already created events or to publish new ones. Each user can inspect each event separately and in details. Later the user can decide to pay and purchase an available event (which is not expired and has vouchers which are not already sold).
+
+### Payment and cart checkout
+In order to finish the payment process the user must first add the events they want to purchase to their Cart. The cart is kept in the database that's why it's not lost upon session close thus allowing better user experience. When the user proceeds with the checkout they can decide to remove something from the cart or pay the required sum. Afterwards the successfully completed payments are listed in the "User Profile" panel under the "Purchases" tab. 
+
+### User profile and customizations
+Every signed in user can access and configure their profile anytime allowing to change email, usernames and other. In addition to this everyone can upload a profile picture which is later stored in external cloud based file storage provider - [Cloudinary](https://cloudinary.com). All this provide a sense of customization and also strengthens the security of the profile as the login password can be easily changed through the profile panel. 
 
 ### User management 
 The website support user managed via roles. The table summarizes the roles and their scope. The user groups in the table below are in descending order in regards to the permissions they have (for instance the _ADMIN_ role has all the permissions that are granted to the _GUEST_ and _USER_ roles). 
@@ -34,14 +44,11 @@ The first user to register in the website is granted a _ROOT_ permissions. There
 | _ADMIN_      | <ul><li>Access to admin panel for easy users (both GUESTS and USERS), purchases and other services management</li><li>Access to the Swagger dashboard</li></ul>        | 
 | _ROOT_ | <ul><li>Make modifications to the other admins via the admin panel</li></ul>      | 
 
-### Cloud file storage
-Every user can upload a profile picture which is later stored in external cloud based file storage provider - [Cloudinary](https://cloudinary.com).
+### Admin panel
+There is a rich featurd admin panel that allows for the _ROOT_ and _ADMIN_ users to easily manage the content of the website including the registed users. Some of the available possibilities are: modification of user profiles and credentials, deleting purchases, deleting users and others.
 
 ### REST API Documentation
 The project is integrated with [Swagger.io](https://swagger.io) and provids internal REST API documentation accessiable at [/swagger-ui.html](/swagger-ui.html) (for instance, if deployed locally you can check it at <http://localhost:8080/swagger-ui.html>). This dashboard is only available to users with _ADMIN_ or _ROOT_ roles.
-
-### Tested
-The service and the controller layers are extremelly well unit tested. The unit test coverage is above 80%.
 
 ---
 

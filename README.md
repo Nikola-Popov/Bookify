@@ -15,6 +15,7 @@ The tech stack is solely [Java Spring](https://spring.io) for the backend while 
           - [Docker](#docker)
           - [Embedded Tomcat server](#embedded-tomcat-server)
      - [Production profile](#production-profile)
+- [Kubernetes Deployment](#kubernetes-deployment)
 - [License](#license)
 
 
@@ -81,7 +82,7 @@ The approaches differ only in the configurations (more precisely the application
 $ docker build -f Dockerfile -t bookify .
 $ docker run -p 8080:8080 bookify
 ```
-Note that while using docker run you will not be able to access the H2 web console.In other words <http://localhost:8080/h2> will block remote connections will refuse access to it.
+Note that while using docker run you will not be able to access the H2 web console.In other words <http://localhost:8080/h2> will block remote connections thus refusing access to it.
 ##### Embedded Tomcat server
 ```shell
 $  mvn spring-boot:run
@@ -91,6 +92,17 @@ $  mvn spring-boot:run
 ```shell
 $ java -jar -Dspring.profiles.active=prod ./target/bookify.war
 ```
+
+---
+
+## Kubernetes Deployment
+Deployment is available via Kubernetes using the local docker image mentioned above. As a prerequisited the minikube tool must be up-and-running.
+```shell
+$ docker build -f Dockerfile -t bookify .
+$ kubectl apply -f k8s/bookify-application-deployment.yaml 
+$ minikube service bookify-webapp-service
+```
+
 ---
 ## License
 

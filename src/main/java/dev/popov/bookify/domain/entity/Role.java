@@ -18,6 +18,8 @@ import lombok.Setter;
 @Entity
 @Table(name = "roles")
 public class Role extends BaseEntity implements GrantedAuthority {
+	private static final long serialVersionUID = -3833733946319379797L;
+
 	@Column(name = "authority", nullable = false)
 	private String authority;
 }

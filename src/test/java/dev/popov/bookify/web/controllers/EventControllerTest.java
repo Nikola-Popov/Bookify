@@ -1,6 +1,6 @@
 package dev.popov.bookify.web.controllers;
 
-import static dev.popov.bookify.commons.constants.AuthorityConstants.ADMIN;
+import static dev.popov.bookify.commons.constants.RoleConstants.ADMIN;
 import static dev.popov.bookify.web.controllers.constants.event.EventBindingConstants.EVENT_CREATE_BINDING_MODEL;
 import static dev.popov.bookify.web.controllers.constants.event.EventPathConstants.BROWSE;
 import static dev.popov.bookify.web.controllers.constants.event.EventPathConstants.CREATE;

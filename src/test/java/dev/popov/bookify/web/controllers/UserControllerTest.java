@@ -1,6 +1,6 @@
 package dev.popov.bookify.web.controllers;
 
-import static dev.popov.bookify.commons.constants.AuthorityConstants.ADMIN;
+import static dev.popov.bookify.commons.constants.RoleConstants.ADMIN;
 import static dev.popov.bookify.web.controllers.constants.user.UserPathConstants.DELETE;
 import static dev.popov.bookify.web.controllers.constants.user.UserPathConstants.EDIT;
 import static dev.popov.bookify.web.controllers.constants.user.UserPathConstants.LOGIN_PATH;

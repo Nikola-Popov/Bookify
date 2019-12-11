@@ -1,6 +1,6 @@
 package dev.popov.bookify.web.controllers;
 
-import static dev.popov.bookify.commons.constants.AuthorityConstants.ADMIN;
+import static dev.popov.bookify.commons.constants.RoleConstants.ADMIN;
 import static dev.popov.bookify.web.controllers.constants.purchase.PurchasePathConstants.DELETE;
 import static dev.popov.bookify.web.controllers.constants.purchase.PurchasePathConstants.PURCHASES;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;

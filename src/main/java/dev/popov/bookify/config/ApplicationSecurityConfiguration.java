@@ -32,8 +32,9 @@ public class ApplicationSecurityConfiguration extends WebSecurityConfigurerAdapt
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.cors().disable().csrf().disable().authorizeRequests().antMatchers(toArray(SWAGGER_PATHS, String.class))
-				.hasAnyRole(ROOT, ADMIN).antMatchers(toArray(UI_DIRS_WHITELIST, String.class)).permitAll()
+		http.headers().frameOptions().sameOrigin().and().cors().disable().csrf().disable().authorizeRequests()
+				.antMatchers(toArray(SWAGGER_PATHS, String.class)).hasAnyRole(ROOT, ADMIN)
+				.antMatchers(toArray(UI_DIRS_WHITELIST, String.class)).permitAll()
 				.antMatchers(INDEX, USERS_LOGIN, USERS_REGISTER, "/connect/**").anonymous().anyRequest().authenticated()
 				.and().formLogin().loginPage(USERS_LOGIN).usernameParameter(USERNAME).passwordParameter(PASSWORD)
 				.defaultSuccessUrl(HOME).and().logout().logoutUrl(USERS_LOGOUT).invalidateHttpSession(true)

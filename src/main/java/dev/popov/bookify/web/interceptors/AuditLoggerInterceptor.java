@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+import org.springframework.web.util.UrlPathHelper;
 
 import dev.popov.bookify.domain.entity.AuditLog;
 import dev.popov.bookify.repository.AuditLogRepository;
@@ -28,16 +29,23 @@ public class AuditLoggerInterceptor extends HandlerInterceptorAdapter {
 
 	private final AuditLogRepository auditLogRepository;
 	private final AuditLogFactory auditLogFactory;
+	private final UrlPathHelper urlPathHelper;
 
 	@Autowired
-	public AuditLoggerInterceptor(AuditLogRepository auditLogRepository, AuditLogFactory auditLogFactory) {
+	public AuditLoggerInterceptor(AuditLogRepository auditLogRepository, AuditLogFactory auditLogFactory,
+			UrlPathHelper urlPathHelper) {
 		this.auditLogRepository = auditLogRepository;
 		this.auditLogFactory = auditLogFactory;
+		this.urlPathHelper = urlPathHelper;
 	}
 
 	@Override
 	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
 			ModelAndView modelAndView) {
+		if (isSocialLogin(request)) {
+			return;
+		}
+
 		if (MODIFICATION_HTTP_METHODS.contains(request.getMethod().toLowerCase(ENGLISH))
 				&& isUserAuthenticated(handler)) {
 			final AuditLog auditLog = auditLogFactory.createAuditLog(request.getUserPrincipal().getName(),
@@ -45,6 +53,10 @@ public class AuditLoggerInterceptor extends HandlerInterceptorAdapter {
 
 			auditLogRepository.saveAndFlush(auditLog);
 		}
+	}
+
+	private boolean isSocialLogin(HttpServletRequest request) {
+		return urlPathHelper.getPathWithinApplication(request).endsWith("/connect/facebook");
 	}
 
 	private boolean isUserAuthenticated(Object handler) {

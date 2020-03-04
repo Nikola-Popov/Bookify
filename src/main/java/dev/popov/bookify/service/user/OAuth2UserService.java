@@ -15,25 +15,29 @@ import dev.popov.bookify.repository.UserRepository;
 
 @Component
 public class OAuth2UserService extends DefaultOAuth2UserService {
-    private final UserRepository userRepository;
+    private final UserService userService;
     private final ModelMapper modelMapper;
     
     @Autowired
-    public OAuth2UserService(UserRepository userRepository, ModelMapper modelMapper) {
-        this.userRepository = userRepository;
+    public OAuth2UserService(UserService userService, ModelMapper modelMapper) {
+        this.userService = userService;
         this.modelMapper = modelMapper;
     }
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
-      final  OAuth2User loadUser = super.loadUser(userRequest);
-        Map<String, Object> attributes = loadUser.getAttributes();
-        System.out.println(attributes.get("name"));
-        System.out.println(attributes.get("login"));
-        System.out.println(attributes.get("id"));
-        System.out.println(attributes.get("email"));
-        UserServiceModel userServiceModel = new UserServiceModel();
+        final OAuth2User oauth2User = super.loadUser(userRequest);
+//        final UserServiceModel userServiceModel = modelMapper.map(OAuth2User.class, UserServiceModel.class,
+//                SSO_GITHUB_USER_MAPPING);
+// 
+//        if (!isUserRegistered(userServiceModel)) {
+//            userService.register(userServiceModel);
+//        }
 
-        return loadUser;
+        return oauth2User;
+    }
+
+    private boolean isUserRegistered(final UserServiceModel userServiceModel) {
+        return userService.findByUsername(userServiceModel.getUsername()).isPresent();
     }
 }

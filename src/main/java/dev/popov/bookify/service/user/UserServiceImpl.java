@@ -1,11 +1,14 @@
 package dev.popov.bookify.service.user;
 
 import static dev.popov.bookify.commons.constants.RoleConstants.ROLE_ROOT;
+import static java.util.Optional.empty;
+import static java.util.Optional.of;
 import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -110,8 +113,14 @@ public class UserServiceImpl implements UserService {
 				.orElseThrow(() -> new UserNotFoundException(UNABLE_TO_FIND_USER_BY_ID_MESSAGE)));
 		userRepository.deleteById(id);
 	}
+	
+    @Override
+    public Optional<UserServiceModel> findByUsername(String username) {
+        final Optional<User> user = userRepository.findByUsername(username);
+        return user.isPresent() ? of(modelMapper.map(user.get(), UserServiceModel.class)) : empty();
+    }
 
-	private boolean isImageSelected(MultipartFile image) {
+    private boolean isImageSelected(MultipartFile image) {
 		return image != null && !image.isEmpty();
 	}
 

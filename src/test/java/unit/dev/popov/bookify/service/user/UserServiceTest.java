@@ -1,7 +1,12 @@
 package unit.dev.popov.bookify.service.user;
 
 import static dev.popov.bookify.commons.constants.RoleConstants.ROLE_ROOT;
+import static dev.popov.bookify.commons.constants.RoleConstants.ROLE_USER;
 import static java.util.Arrays.asList;
+import static java.util.Optional.empty;
+import static java.util.Optional.of;
+import static org.hamcrest.Matchers.equalTo;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -21,7 +26,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.multipart.MultipartFile;
 
-import dev.popov.bookify.commons.constants.RoleConstants;
 import dev.popov.bookify.commons.exceptions.ForbiddenActionOnRootException;
 import dev.popov.bookify.commons.exceptions.UserNotFoundException;
 import dev.popov.bookify.domain.entity.Contact;
@@ -101,12 +105,13 @@ public class UserServiceTest {
 
 		when(passwordEncoderMock.encode(PASSWORD)).thenReturn(ENCODED_PASSWORD);
 
-		when(roleServiceMock.findByAuthority(RoleConstants.ROLE_USER)).thenReturn(roleServiceModelMock);
+		when(roleServiceMock.findByAuthority(ROLE_USER)).thenReturn(roleServiceModelMock);
 
 		when(userRepositoryMock.saveAndFlush(userMock)).thenReturn(userMock);
-		when(userRepositoryMock.findById(ID)).thenReturn(Optional.of(userMock));
-
-		when(userMock.getContact()).thenReturn(contactMock);
+		when(userRepositoryMock.findById(ID)).thenReturn(of(userMock));
+        when(userRepositoryMock.findByUsername(USERNAME)).thenReturn(of(userMock));
+		
+        when(userMock.getContact()).thenReturn(contactMock);
 
 		when(contactMock.getId()).thenReturn(ID);
 
@@ -206,6 +211,18 @@ public class UserServiceTest {
 		userServiceImpl.delete(ID);
 
 		verify(userRepositoryMock).deleteById(ID);
+	}
+	
+	@Test
+	public void testFindByUsernameReturnsEmptyWhenNoSuchUser() {
+        when(userRepositoryMock.findByUsername(USERNAME)).thenReturn(empty());
+        
+        assertThat(userServiceImpl.findByUsername(USERNAME), equalTo(empty()));
+	}
+	
+	@Test
+	public void testFindByUsernameReturnsUser() {
+	    assertThat(userServiceImpl.findByUsername(USERNAME).get(), equalTo(userServiceModelMock));
 	}
 
 	private Set<Role> createRootAuthority() {
